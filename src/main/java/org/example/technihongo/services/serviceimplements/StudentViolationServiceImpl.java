@@ -145,11 +145,10 @@ public class StudentViolationServiceImpl implements StudentViolationService {
         if (status == ViolationStatus.DISMISSED) {
             updateViolationStatus(violation, admin, request.getActionTaken(), status);
             response.setMessage("Vi phạm đã bị bác bỏ.");
-            return response;
         }
 
         // Xử lý RESOLVED - trường hợp xác nhận vi phạm
-        if (violation.getStudentFlashcardSet() != null) {
+        if (violation.getStudentFlashcardSet() != null && status == ViolationStatus.RESOLVED) {
             StudentFlashcardSet flashcardSet = violation.getStudentFlashcardSet();
             Student student = flashcardSet.getCreator();
 
@@ -165,7 +164,7 @@ public class StudentViolationServiceImpl implements StudentViolationService {
             if (violationCount == 1) {
                 violation.setViolationHandledAt(LocalDateTime.now());
             }
-        } else if (violation.getStudentCourseRating() != null) {
+        } else if (violation.getStudentCourseRating() != null && status == ViolationStatus.RESOLVED) {
             // Xử lý cho Rating (có thể bổ sung code tương tự như trên)
             response.setMessage("Vi phạm cho Rating đã được xử lý.");
         }
@@ -179,7 +178,7 @@ public class StudentViolationServiceImpl implements StudentViolationService {
             updateViolationStatus(
                     relatedViolation,
                     admin,
-                    String.format("Tự động xử lý cùng với vi phạm ID %d: %s", violationId, request.getActionTaken()),
+                    String.format("Tự động xử lý cùng với vi phạm có ID %d", violationId),
                     status
             );
         }
