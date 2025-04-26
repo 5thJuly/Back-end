@@ -50,7 +50,7 @@ public class SecurityConfig {
                                 "/*/resource-progress/*/*", "/*/*/send-reminders", "/*/study-plan/course/*",
                                 "/*/study-plan/{id:[0-9]+}", "/*/subscription/all", "/*/subscription/detail/*",
                                 "/*/system-flashcard-set/getSysFlashcardSet/*", "/*/system-flashcard-set/getAllFlashcardOfSet/*",
-                                "/*/course-progress/all/*").permitAll()
+                                "/*/course-progress/all/*", "/*/student-flashcard-set/getAllFlashcardOfSet/*").permitAll()
 
 
                         .requestMatchers("/*/lesson-progress/*", "/*/favorite/**", "/*/learning-log/view",
@@ -60,7 +60,7 @@ public class SecurityConfig {
                                 "/*/student-course-rating/student-rating/course/*", "/*/learning-log/track",
                                 "/*/student-flashcard-set/create", "/*/student-flashcard-set/update/*",
                                 "/*/student-flashcard-set/updateOrder/*", "/*/student-flashcard-set/delete/*",
-                                "/*/student-flashcard-set/updateVisibility/*", "/*/student-flashcard-set/getAllFlashcardOfSet/*",
+                                "/*/student-flashcard-set/updateVisibility/*",
                                 "/*/*/getStudentFlashcardSet/*", "/*/*/publicFlashcardSet", "/*/student-flashcard-set/all",
                                 "/*/*/from-resource", "/*/*/clone/*", "/*/flashcard-set-progress/track",
                                 "/*/flashcard-set-progress/complete", "/*/student-folder/**", "/*/student-quiz-attempt/**",

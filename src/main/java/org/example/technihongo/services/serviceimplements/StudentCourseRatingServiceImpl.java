@@ -275,6 +275,7 @@ public class StudentCourseRatingServiceImpl implements StudentCourseRatingServic
         dto.setRatingId(rating.getRatingId());
         dto.setStudentId(rating.getStudent().getStudentId());
         dto.setUserName(user.getUserName());
+        dto.setCreatedAt(user.getCreatedAt());
         dto.setProfileImg(user.getProfileImg());
         dto.setCourseId(rating.getCourse().getCourseId());
         dto.setRating(rating.getRating());

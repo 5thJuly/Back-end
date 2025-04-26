@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,4 +19,5 @@ public class StudentCourseRatingDTO {
     private Integer courseId;
     private Integer rating;
     private String review;
+    private LocalDateTime createdAt;
 }
