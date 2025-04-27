@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/*/learning-path/search/*", "/*/learning-resource/{id:[0-9]+}", "/*/lesson/{id:[0-9]+}",
                                 "/*/lesson/*/paginated/*", "/*/lesson-resource/{id:[0-9]+}", "/*/lesson-resource/lesson/*",
                                 "/*/meeting/all", "/*/meeting/{id:[0-9]+}", "/*/script/meeting/*", "/*/script/{id:[0-9]+}",
-                                "/*/payment-method/all", "/*/payment/*", "/*/course-progress/view/*", "/*/student-course-rating/getRating/*",
+                                "/*/payment-method/all", "/*/payment/**", "/*/v1/payment/**", "/*/course-progress/view/*", "/*/student-course-rating/getRating/*",
                                 "/*/student-course-rating/average/*", "/*/student-course-rating/course/**", "/*/student-flashcard-set/getUserFlashcard/*/*",
                                 "/*/*/searchTitle", "/*/flashcard-set-progress/all/*", "/*/flashcard-set-progress/set/*",
                                 "/*/resource-progress/*/*", "/*/*/send-reminders", "/*/study-plan/course/*",
