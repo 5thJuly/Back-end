@@ -2,6 +2,7 @@ package org.example.technihongo.services.interfaces;
 
 import org.example.technihongo.dto.MeetingScriptDTO;
 import org.example.technihongo.dto.PageResponseDTO;
+import org.example.technihongo.dto.ScriptOrderDTO;
 import org.example.technihongo.entities.MeetingScript;
 
 public interface MeetingScriptService {
@@ -10,4 +11,5 @@ public interface MeetingScriptService {
     MeetingScript createScript(MeetingScriptDTO dto);
     void updateScript(Integer scriptId, MeetingScriptDTO dto);
     void deleteScript(Integer scriptId);
+    void updateScriptOrder(Integer meetingId, ScriptOrderDTO scriptOrderDTO);
 }

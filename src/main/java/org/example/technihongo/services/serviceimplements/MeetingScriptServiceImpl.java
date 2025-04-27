@@ -3,8 +3,11 @@ package org.example.technihongo.services.serviceimplements;
 import lombok.RequiredArgsConstructor;
 import org.example.technihongo.dto.MeetingScriptDTO;
 import org.example.technihongo.dto.PageResponseDTO;
+import org.example.technihongo.dto.ScriptOrderDTO;
+import org.example.technihongo.dto.UpdateQuizQuestionOrderDTO;
 import org.example.technihongo.entities.Meeting;
 import org.example.technihongo.entities.MeetingScript;
+import org.example.technihongo.entities.QuizQuestion;
 import org.example.technihongo.repositories.MeetingRepository;
 import org.example.technihongo.repositories.MeetingScriptRepository;
 import org.example.technihongo.services.interfaces.MeetingScriptService;
@@ -70,15 +73,15 @@ public class MeetingScriptServiceImpl implements MeetingScriptService {
         MeetingScript script = meetingScriptRepository.findById(scriptId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy kịch bản"));
 
-        Meeting meeting = script.getMeeting();
-        Integer oldOrder = script.getScriptOrder();
-        Integer newOrder = dto.getScriptOrder();
-        if (!oldOrder.equals(newOrder)) {
-            adjustScriptOrders(meeting.getMeetingId(), oldOrder, newOrder);
-        }
+//        Meeting meeting = script.getMeeting();
+//        Integer oldOrder = script.getScriptOrder();
+//        Integer newOrder = dto.getScriptOrder();
+//        if (!oldOrder.equals(newOrder)) {
+//            adjustScriptOrders(meeting.getMeetingId(), oldOrder, newOrder);
+//        }
         script.setQuestion(dto.getQuestion());
         script.setAnswer(dto.getAnswer());
-        script.setScriptOrder(newOrder);
+//        script.setScriptOrder(newOrder);
         meetingScriptRepository.save(script);
     }
 
@@ -103,24 +106,43 @@ public class MeetingScriptServiceImpl implements MeetingScriptService {
         }
     }
 
-    private void adjustScriptOrders(Integer meetingId, Integer oldOrder, Integer newOrder) {
-        List<MeetingScript> scripts = meetingScriptRepository.findByMeetingMeetingIdOrderByScriptOrder(meetingId);
-        if (newOrder > oldOrder) {
-            for (MeetingScript s : scripts) {
-                if (s.getScriptOrder() > oldOrder && s.getScriptOrder() <= newOrder) {
-                    s.setScriptOrder(s.getScriptOrder() - 1);
-                    meetingScriptRepository.save(s);
-                }
-            }
-        } else {
-            for (MeetingScript s : scripts) {
-                if (s.getScriptOrder() >= newOrder && s.getScriptOrder() < oldOrder) {
-                    s.setScriptOrder(s.getScriptOrder() + 1);
-                    meetingScriptRepository.save(s);
-                }
-            }
+    @Override
+    public void updateScriptOrder(Integer meetingId, ScriptOrderDTO scriptOrderDTO) {
+        meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy buổi họp"));
+
+        List<MeetingScript> meetingScripts = meetingScriptRepository.findByMeetingMeetingIdOrderByScriptOrder(meetingId);
+        List<Integer> newOrder = scriptOrderDTO.getNewScriptOrder();
+
+        if (meetingScripts.size() != newOrder.size()) {
+            throw new RuntimeException("Số lượng Script so với thứ tự không hợp lệ!");
         }
+
+        for (int i = 0; i < meetingScripts.size(); i++) {
+            meetingScripts.get(i).setScriptOrder(newOrder.get(i));
+        }
+
+        meetingScriptRepository.saveAll(meetingScripts);
     }
+
+//    private void adjustScriptOrders(Integer meetingId, Integer oldOrder, Integer newOrder) {
+//        List<MeetingScript> scripts = meetingScriptRepository.findByMeetingMeetingIdOrderByScriptOrder(meetingId);
+//        if (newOrder > oldOrder) {
+//            for (MeetingScript s : scripts) {
+//                if (s.getScriptOrder() > oldOrder && s.getScriptOrder() <= newOrder) {
+//                    s.setScriptOrder(s.getScriptOrder() - 1);
+//                    meetingScriptRepository.save(s);
+//                }
+//            }
+//        } else {
+//            for (MeetingScript s : scripts) {
+//                if (s.getScriptOrder() >= newOrder && s.getScriptOrder() < oldOrder) {
+//                    s.setScriptOrder(s.getScriptOrder() + 1);
+//                    meetingScriptRepository.save(s);
+//                }
+//            }
+//        }
+//    }
 
     private <T> PageResponseDTO<T> getPageResponseDTO(Page<T> page) {
         return PageResponseDTO.<T>builder()

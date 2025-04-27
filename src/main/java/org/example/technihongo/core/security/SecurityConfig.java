@@ -84,7 +84,8 @@ public class SecurityConfig {
                                 "/*/quiz-question/delete/*", "/*/quiz-question/create-new-question", "/*/study-plan/create",
                                 "/*/study-plan/update/*", "/*/study-plan/delete/*", "/*/system-flashcard-set/create",
                                 "/*/system-flashcard-set/update/*", "/*/system-flashcard-set/delete/*", "/*/system-flashcard-set/updateOrder/*",
-                                "/*/system-flashcard-set/update-visibility/*", "/*/system-flashcard-set/all").hasRole("Content Manager")
+                                "/*/system-flashcard-set/update-visibility/*", "/*/system-flashcard-set/all",
+                                "/*/script/update-order/*").hasRole("Content Manager")
 
 
                         .requestMatchers("/*/user/content-manager", "/*/*/*/overview", "/*/*/set-violated/*",

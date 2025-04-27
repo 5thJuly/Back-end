@@ -69,6 +69,7 @@ public class MeetingServiceImpl implements MeetingService {
         meeting.setTitle(dto.getTitle());
         meeting.setDescription(dto.getDescription());
         meeting.setIsActive(dto.getIsActive());
+        meeting.setVoiceName(dto.getVoiceName());
         meetingRepository.save(meeting);
     }
 

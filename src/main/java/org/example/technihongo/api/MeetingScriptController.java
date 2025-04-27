@@ -2,9 +2,7 @@ package org.example.technihongo.api;
 
 import lombok.RequiredArgsConstructor;
 import org.example.technihongo.core.security.JwtUtil;
-import org.example.technihongo.dto.MeetingDTO;
-import org.example.technihongo.dto.MeetingScriptDTO;
-import org.example.technihongo.dto.PageResponseDTO;
+import org.example.technihongo.dto.*;
 import org.example.technihongo.entities.Meeting;
 import org.example.technihongo.entities.MeetingScript;
 import org.example.technihongo.response.ApiResponse;
@@ -251,6 +249,38 @@ public class MeetingScriptController {
                     .body(ApiResponse.builder()
                             .success(false)
                             .message("Xóa kịch bản thất bại: " + e.getMessage())
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message("Internal Server Error: " + e.getMessage())
+                            .build());
+        }
+    }
+
+    @PatchMapping("/update-order/{meetingId}")
+    @PreAuthorize("hasRole('ROLE_Content Manager')")
+    public ResponseEntity<ApiResponse> updateScriptOrder(
+            @PathVariable Integer meetingId,
+            @RequestBody ScriptOrderDTO scriptOrderDTO) {
+        try{
+            meetingScriptService.updateScriptOrder(meetingId, scriptOrderDTO);
+            return ResponseEntity.ok(ApiResponse.builder()
+                    .success(true)
+                    .message("Cập nhật thứ tự script thành công")
+                    .build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message(e.getMessage())
+                            .build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message("Cập nhật thứ tự script thất bại: " + e.getMessage())
                             .build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

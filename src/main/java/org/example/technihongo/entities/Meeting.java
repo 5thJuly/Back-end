@@ -33,6 +33,9 @@ public class Meeting {
     @Column(name = "is_active")
     private Boolean isActive = false;
 
+    @Column(name = "voice_name")
+    private String voiceName;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
