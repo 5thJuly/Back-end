@@ -190,7 +190,7 @@ public class VNPayServiceImpl implements VNPayService {
         List<StudentSubscription> allSubscriptions = studentSubscriptionRepository
                 .findAllByStudent_StudentIdAndIsActiveTrueOrEndDateAfter(studentId, LocalDateTime.now(), Pageable.unpaged());
         long renewalCount = allSubscriptions.size() - 1; // Trừ subscription đầu tiên
-        if (renewalCount >= 2) {
+        if (renewalCount >= 3) {
             throw new RuntimeException("Hãy dành thời gian và học thật kỹ khóa học trước khi gia hạn thêm nhé");
         }
 

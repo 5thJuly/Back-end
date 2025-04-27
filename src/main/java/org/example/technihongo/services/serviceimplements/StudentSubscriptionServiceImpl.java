@@ -61,7 +61,7 @@ public class StudentSubscriptionServiceImpl implements StudentSubscriptionServic
         List<StudentSubscription> allSubscriptions = subscriptionRepository
                 .findAllByStudent_StudentIdAndIsActiveTrueOrEndDateAfter(studentId, LocalDateTime.now(), Pageable.unpaged());
         long renewalCount = allSubscriptions.size() - 1;
-        if (renewalCount >= 2) {
+        if (renewalCount >= 3) {
             throw new RuntimeException("Hãy dành thời gian và học thật kỹ khóa học trước khi gia hạn thêm nhé");
         }
 
