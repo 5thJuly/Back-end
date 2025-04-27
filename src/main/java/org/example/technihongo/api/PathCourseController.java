@@ -51,7 +51,7 @@ public class PathCourseController {
                     PageResponseDTO<PathCourse> pathCourses = pathCourseService.getPathCoursesByLearningPathId(pathId, pageNo, pageSize, sortBy, sortDir);
                     if (pathCourses.getContent().isEmpty()) {
                         return ResponseEntity.ok(ApiResponse.builder()
-                                .success(false)
+                                .success(true)
                                 .message("Danh sách PathCourse trống!")
                                 .build());
                     } else {
@@ -66,7 +66,7 @@ public class PathCourseController {
                     PageResponseDTO<PathCourse> pathCourses = pathCourseService.getPublicPathCourseListByLearningPathId(pathId, pageNo, pageSize, sortBy, sortDir);
                     if (pathCourses.getContent().isEmpty()) {
                         return ResponseEntity.ok(ApiResponse.builder()
-                                .success(false)
+                                .success(true)
                                 .message("Danh sách PathCourse trống!")
                                 .build());
                     } else {
@@ -81,7 +81,7 @@ public class PathCourseController {
                 PageResponseDTO<PathCourse> pathCourses = pathCourseService.getPublicPathCourseListByLearningPathId(pathId, pageNo, pageSize, sortBy, sortDir);
                 if (pathCourses.getContent().isEmpty()) {
                     return ResponseEntity.ok(ApiResponse.builder()
-                            .success(false)
+                            .success(true)
                             .message("Danh sách PathCourse trống!")
                             .build());
                 } else {

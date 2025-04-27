@@ -41,6 +41,8 @@ public class CourseServiceImpl implements CourseService {
     private StudentStudyPlanRepository studentStudyPlanRepository;
     @Autowired
     private StudyPlanRepository studyPlanRepository;
+    @Autowired
+    private PathCourseRepository pathCourseRepository;
 
     @Override
     public List<Course> courseList() {
@@ -134,6 +136,11 @@ public class CourseServiceImpl implements CourseService {
 //        Boolean.FALSE.equals(updateCourseDTO.getIsPublic()) &&
         if (hasStudents) {
             throw new RuntimeException("Không thể cập nhật khóa học đang có người học.");
+        }
+
+        boolean inLearningPath = pathCourseRepository.existsByCourse_CourseId(courseId);
+        if (inLearningPath){
+            throw new RuntimeException("Không thể cập nhật khóa học đã thêm vào LearningPath.");
         }
 
         Course course = courseRepository.findByCourseId(courseId);
