@@ -3,6 +3,7 @@ package org.example.technihongo.core.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,14 +45,13 @@ public class SecurityConfig {
                                 "/*/learning-path/search/*", "/*/learning-resource/{id:[0-9]+}", "/*/lesson/{id:[0-9]+}",
                                 "/*/lesson/*/paginated/*", "/*/lesson-resource/{id:[0-9]+}", "/*/lesson-resource/lesson/*",
                                 "/*/meeting/all", "/*/meeting/{id:[0-9]+}", "/*/script/meeting/*", "/*/script/{id:[0-9]+}",
-                                "/*/payment-method/all", "/*/payment/**", "/*/v1/payment/**", "/*/course-progress/view/*", "/*/student-course-rating/getRating/*",
+                                "/*/payment-method/all", "/api/v1/payment/**", "/*/course-progress/view/*", "/*/student-course-rating/getRating/*",
                                 "/*/student-course-rating/average/*", "/*/student-course-rating/course/**", "/*/student-flashcard-set/getUserFlashcard/*/*",
                                 "/*/*/searchTitle", "/*/flashcard-set-progress/all/*", "/*/flashcard-set-progress/set/*",
                                 "/*/resource-progress/*/*", "/*/*/send-reminders", "/*/study-plan/course/*",
                                 "/*/study-plan/{id:[0-9]+}", "/*/subscription/all", "/*/subscription/detail/*",
                                 "/*/system-flashcard-set/getSysFlashcardSet/*", "/*/system-flashcard-set/getAllFlashcardOfSet/*",
                                 "/*/course-progress/all/*", "/*/student-flashcard-set/getAllFlashcardOfSet/*").permitAll()
-
 
                         .requestMatchers("/*/lesson-progress/*", "/*/favorite/**", "/*/learning-log/view",
                                 "/*/achievement/student/**", "/*/flashcard/*/studentCreate", "/*/flashcard-progress/*",
