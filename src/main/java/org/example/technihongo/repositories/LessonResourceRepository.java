@@ -37,4 +37,7 @@ public interface LessonResourceRepository extends JpaRepository<LessonResource, 
             "ORDER BY lr.typeOrder ASC")
     List<LessonResource> findByLesson_LessonIdAndActiveOrderByTypeOrderAsc(
             @Param("lessonId") Integer lessonId,
-            @Param("isActive") boolean isActive);}
+            @Param("isActive") boolean isActive);
+
+    void deleteByLesson_LessonId(Integer lessonId);
+}

@@ -74,7 +74,7 @@ public class SecurityConfig {
                                 "/*/domain/delete/*", "/*/*/*/systemCreate", "/*/learning-path/create",
                                 "/*/learning-path/update/*", "/*/learning-path/delete/*", "/*/learning-resource/all",
                                 "/*/learning-resource/create", "/*/learning-resource/update/*", "/*/learning-resource/update-status/*",
-                                "/*/learning-resource/delete/*", "/*/lesson/create", "/*/lesson/update/*",
+                                "/*/learning-resource/delete/*", "/*/lesson/create", "/*/lesson/update/*", "/*/lesson/delete/*",
                                 "/*/*/update-order/*", "/*/*/set-order/*", "/*/lesson-resource/create",
                                 "/*/lesson-resource/update/*", "/*/lesson-resource/delete/*", "/*/lesson-resource/study-plan",
                                 "/*/meeting/create", "/*/meeting/update/*", "/*/script/create", "/*/script/update/*",

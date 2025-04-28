@@ -12,6 +12,7 @@ public interface LessonService {
     Lesson createLesson(CreateLessonDTO createLessonDTO);
     void updateLesson(Integer lessonId, UpdateLessonDTO updateLessonDTO);
     void updateLessonOrder(Integer studyPlanId, UpdateLessonOrderDTO updateLessonOrderDTO);
+    void deleteLesson(Integer lessonId);
 
     PageResponseDTO<Lesson> getLessonListByStudyPlanIdPaginated(Integer studyPlanId, int pageNo, int pageSize, String sortBy, String sortDir, String keyword);
     void checkLessonProgressPrerequisite(Integer studentId, Integer lessonId);

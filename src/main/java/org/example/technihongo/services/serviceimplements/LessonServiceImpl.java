@@ -3,10 +3,7 @@ package org.example.technihongo.services.serviceimplements;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.digester.Rule;
 import org.example.technihongo.dto.*;
-import org.example.technihongo.entities.Course;
-import org.example.technihongo.entities.StudentLessonProgress;
-import org.example.technihongo.entities.StudyPlan;
-import org.example.technihongo.entities.Lesson;
+import org.example.technihongo.entities.*;
 import org.example.technihongo.enums.CompletionStatus;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.LessonService;
@@ -25,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +38,8 @@ public class LessonServiceImpl implements LessonService {
     private CourseRepository courseRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private LessonResourceRepository lessonResourceRepository;
 
     @Override
     public Optional<Lesson> getLessonById(Integer lessonId) {
@@ -101,6 +101,29 @@ public class LessonServiceImpl implements LessonService {
         }
 
         lessonRepository.saveAll(lessons);
+    }
+
+    @Override
+    @Transactional
+    public void deleteLesson(Integer lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new RuntimeException("Lesson ID not found!"));
+
+        StudyPlan studyPlan = studyPlanRepository.findById(lesson.getStudyPlan().getStudyPlanId())
+                .orElseThrow(() -> new RuntimeException("StudyPlan ID not found!"));
+
+        if(studyPlan.isActive()) {
+            throw new RuntimeException("Cannot delete Lesson of an active StudyPlan.");
+        }
+
+        boolean existsInStudentLessonProgress = studentLessonProgressRepository.existsByLesson_LessonId(lessonId);
+        if (existsInStudentLessonProgress) {
+            throw new RuntimeException("Cannot delete Lesson because it is referenced in StudentLessonProgress.");
+        }
+
+        lessonResourceRepository.deleteByLesson_LessonId(lessonId);
+
+        lessonRepository.deleteById(lessonId);
     }
 
     @Override

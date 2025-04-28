@@ -135,6 +135,10 @@ public class StudyPlanServiceImpl implements StudyPlanService {
             throw new RuntimeException("Cannot delete an active StudyPlan.");
         }
 
+        if(studyPlan.isDefault()) {
+            throw new RuntimeException("Cannot delete a default StudyPlan.");
+        }
+
         boolean existsInStudentStudyPlan = studentStudyPlanRepository.existsByStudyPlan_StudyPlanId(studyPlanId);
         if (existsInStudentStudyPlan) {
             throw new IllegalStateException("Cannot delete StudyPlan because it is referenced in StudentStudyPlan.");
