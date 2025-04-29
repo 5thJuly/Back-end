@@ -60,6 +60,7 @@ public class MeetingScriptServiceImpl implements MeetingScriptService {
         script.setMeeting(meeting);
         script.setQuestion(dto.getQuestion());
         script.setAnswer(dto.getAnswer());
+        script.setExplanation(dto.getExplanation());
         script.setScriptOrder(maxOrder + 1);
         script = meetingScriptRepository.save(script);
         meeting.setScriptsCount(meeting.getScriptsCount() + 1);
@@ -81,6 +82,7 @@ public class MeetingScriptServiceImpl implements MeetingScriptService {
 //        }
         script.setQuestion(dto.getQuestion());
         script.setAnswer(dto.getAnswer());
+        script.setExplanation(dto.getExplanation());
 //        script.setScriptOrder(newOrder);
         meetingScriptRepository.save(script);
     }

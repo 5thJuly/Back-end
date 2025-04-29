@@ -26,6 +26,9 @@ public class MeetingScript {
     @Column(name = "answer")
     private String answer;
 
+    @Column(name = "explanation")
+    private String explanation;
+
     @Column(name = "script_order")
     private Integer scriptOrder;
 

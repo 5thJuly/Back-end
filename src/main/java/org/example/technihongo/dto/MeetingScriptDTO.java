@@ -10,4 +10,5 @@ public class MeetingScriptDTO {
     private Integer meetingId;
     private String question;
     private String answer;
+    private String explanation;
 }
