@@ -59,8 +59,9 @@ public class MeetingScriptServiceImpl implements MeetingScriptService {
         MeetingScript script = new MeetingScript();
         script.setMeeting(meeting);
         script.setQuestion(dto.getQuestion());
+        script.setQuestionExplain(dto.getQuestionExplain());
         script.setAnswer(dto.getAnswer());
-        script.setExplanation(dto.getExplanation());
+        script.setAnswerExplain(dto.getAnswerExplain());
         script.setScriptOrder(maxOrder + 1);
         script = meetingScriptRepository.save(script);
         meeting.setScriptsCount(meeting.getScriptsCount() + 1);
@@ -81,8 +82,9 @@ public class MeetingScriptServiceImpl implements MeetingScriptService {
 //            adjustScriptOrders(meeting.getMeetingId(), oldOrder, newOrder);
 //        }
         script.setQuestion(dto.getQuestion());
+        script.setQuestionExplain(dto.getQuestionExplain());
         script.setAnswer(dto.getAnswer());
-        script.setExplanation(dto.getExplanation());
+        script.setAnswerExplain(dto.getAnswerExplain());
 //        script.setScriptOrder(newOrder);
         meetingScriptRepository.save(script);
     }

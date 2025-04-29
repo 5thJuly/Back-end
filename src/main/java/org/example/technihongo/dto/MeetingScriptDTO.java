@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class MeetingScriptDTO {
     private Integer meetingId;
     private String question;
+    private String questionExplain;
     private String answer;
-    private String explanation;
+    private String answerExplain;
 }

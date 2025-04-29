@@ -23,11 +23,14 @@ public class MeetingScript {
     @Column(name = "question")
     private String question;
 
+    @Column(name = "question_explain")
+    private String questionExplain;
+
     @Column(name = "answer")
     private String answer;
 
-    @Column(name = "explanation")
-    private String explanation;
+    @Column(name = "answer_explain")
+    private String answerExplain;
 
     @Column(name = "script_order")
     private Integer scriptOrder;
