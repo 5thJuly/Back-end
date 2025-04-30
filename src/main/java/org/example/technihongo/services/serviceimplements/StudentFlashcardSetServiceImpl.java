@@ -273,6 +273,7 @@ public class StudentFlashcardSetServiceImpl implements StudentFlashcardSetServic
         response.setDescription(flashcardSet.getDescription());
         response.setTotalViews(flashcardSet.getTotalViews());
         response.setIsPublic(flashcardSet.isPublic());
+        response.setIsViolated(flashcardSet.isViolated());
         response.setFlashcards(flashcardPage.getContent().stream()
                 .map(this::convertToFlashcardResponseDTO)
                 .collect(Collectors.toList()));
@@ -446,6 +447,8 @@ public class StudentFlashcardSetServiceImpl implements StudentFlashcardSetServic
 
         FlashcardSetResponseDTO response = new FlashcardSetResponseDTO();
         response.setStudentId(flashcardSet.getCreator().getStudentId());
+        response.setUserName(flashcardSet.getCreator().getUser().getUserName());
+        response.setProfileImg(flashcardSet.getCreator().getUser().getProfileImg());
         response.setStudentSetId(flashcardSet.getStudentSetId());
         response.setTitle(flashcardSet.getTitle());
         response.setTotalViews(flashcardSet.getTotalViews());
@@ -462,7 +465,6 @@ public class StudentFlashcardSetServiceImpl implements StudentFlashcardSetServic
 
     private List<Flashcard> createFlashcards(StudentFlashcardSet flashcardSet, List<FlashcardRequestDTO> flashcardDTOs) {
         List<Flashcard> flashcards = new ArrayList<>();
-
         for (int i = 0; i < flashcardDTOs.size(); i++) {
             FlashcardRequestDTO dto = flashcardDTOs.get(i);
 

@@ -344,7 +344,7 @@ public class StudentFlashcardSetController {
     }
 
     @GetMapping("/getAllFlashcardOfSet/{setId}")
-//    @PreAuthorize("hasRole('ROLE_Student')")
+
     public ResponseEntity<ApiResponse> getAllFlashcardsInSet(
             @RequestHeader("Authorization") String authorizationHeader,
             @PathVariable("setId") Integer flashcardSetId) {
