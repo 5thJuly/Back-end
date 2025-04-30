@@ -185,6 +185,12 @@ public class SystemFlashcardSetServiceImpl implements SystemFlashcardSetService 
         flashcardSet.setPublic(isPublic);
         flashcardSet = systemFlashcardSetRepository.save(flashcardSet);
 
+        List<LessonResource> lessonResources = lessonResourceRepository.findBySystemFlashCardSet_SystemSetId(flashcardSetId);
+        for (LessonResource lessonResource : lessonResources) {
+            lessonResource.setActive(isPublic);
+            lessonResourceRepository.save(lessonResource);
+        }
+
         return convertToSystemFlashcardSetResponseDTO(flashcardSet);
     }
 
