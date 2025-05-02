@@ -12,5 +12,5 @@ public class UpdateStudyPlanDTO {
     private String description;
     private Integer hoursPerDay;
     private Boolean isDefault;
-    private Boolean isActive;
+//    private Boolean isActive;
 }

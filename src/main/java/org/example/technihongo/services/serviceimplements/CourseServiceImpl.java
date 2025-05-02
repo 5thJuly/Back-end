@@ -1,10 +1,7 @@
 package org.example.technihongo.services.serviceimplements;
 
 import lombok.RequiredArgsConstructor;
-import org.example.technihongo.dto.CoursePublicDTO;
-import org.example.technihongo.dto.CreateCourseDTO;
-import org.example.technihongo.dto.PageResponseDTO;
-import org.example.technihongo.dto.UpdateCourseDTO;
+import org.example.technihongo.dto.*;
 import org.example.technihongo.entities.Course;
 import org.example.technihongo.entities.Domain;
 import org.example.technihongo.entities.StudyPlan;
@@ -148,10 +145,9 @@ public class CourseServiceImpl implements CourseService {
         course.setDescription(updateCourseDTO.getDescription());
         course.setDomain(domainRepository.findByDomainId(updateCourseDTO.getDomainId()));
         course.setDifficultyLevel(difficultyLevelRepository.findByLevelId(updateCourseDTO.getDifficultyLevelId()));
-//        course.setAttachmentUrl(updateCourseDTO.getAttachmentUrl());
         course.setThumbnailUrl(updateCourseDTO.getThumbnailUrl());
         course.setEstimatedDuration(updateCourseDTO.getEstimatedDuration());
-        course.setPublicStatus(updateCourseDTO.getIsPublic());
+//        course.setPublicStatus(updateCourseDTO.getIsPublic());
 //        course.setPremium(updateCourseDTO.getIsPremium());
         course.setUpdateAt(LocalDateTime.now());
 
@@ -169,6 +165,31 @@ public class CourseServiceImpl implements CourseService {
         userRepository.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("User ID not found."));
         return courseRepository.findByCreator_UserId(creatorId);
+    }
+
+    @Override
+    public void updateCourseStatus(Integer courseId, CourseStatusDTO courseStatusDTO) {
+        if(courseRepository.findByCourseId(courseId) == null){
+            throw new RuntimeException("Không tìm thấy ID khóa học!");
+        }
+
+        if(studyPlanRepository.findByCourse_CourseId(courseId).stream()
+                .noneMatch(s -> s.isDefault() && s.isActive())){
+            throw new RuntimeException("Không tìm thấy StudyPlan mặc định!");
+        }
+
+        boolean hasStudents = studentStudyPlanRepository.findAll().stream()
+                .anyMatch(s -> s.getStudyPlan().getCourse().getCourseId().equals(courseId)
+                        && s.getStatus().equals(StudyPlanStatus.ACTIVE));
+        if (hasStudents) {
+            throw new RuntimeException("Không thể cập nhật khóa học đang có người học.");
+        }
+
+        Course course = courseRepository.findByCourseId(courseId);
+        course.setPublicStatus(courseStatusDTO.getIsPublic());
+        course.setUpdateAt(LocalDateTime.now());
+
+        courseRepository.save(course);
     }
 
     @Override

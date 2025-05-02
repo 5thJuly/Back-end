@@ -625,4 +625,62 @@ public class CourseController {
                             .build());
         }
     }
+
+    @PatchMapping("/update-status/{courseId}")
+    @PreAuthorize("hasRole('ROLE_Content Manager')")
+    public ResponseEntity<ApiResponse> updateCourseStatus(
+            @PathVariable Integer courseId,
+            @RequestBody CourseStatusDTO courseStatusDTO,
+            @RequestHeader("Authorization") String authorizationHeader,
+            HttpServletRequest httpRequest) {
+        try{
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring(7);
+                Integer loginUserId = jwtUtil.extractUserId(token);
+
+                courseService.updateCourseStatus(courseId, courseStatusDTO);
+
+                String ipAddress = httpRequest.getRemoteAddr();
+                String userAgent = httpRequest.getHeader("User-Agent");
+                userActivityLogService.trackUserActivityLog(
+                        loginUserId,
+                        ActivityType.UPDATE,
+                        ContentType.Course,
+                        courseId,
+                        ipAddress,
+                        userAgent
+                );
+
+                return ResponseEntity.ok(ApiResponse.builder()
+                        .success(true)
+                        .message("Cập nhật khóa học thành công")
+                        .build());
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponse.builder()
+                                .success(false)
+                                .message("Không có quyền")
+                                .build());
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message(e.getMessage())
+                            .build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message("Cập nhật khóa học thất bại: " + e.getMessage())
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message("Internal Server Error: " + e.getMessage())
+                            .build());
+        }
+    }
 }

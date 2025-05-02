@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.technihongo.core.security.JwtUtil;
 import org.example.technihongo.dto.CreateStudyPlanDTO;
+import org.example.technihongo.dto.StudyPlanStatusDTO;
 import org.example.technihongo.dto.UpdateStudyPlanDTO;
 import org.example.technihongo.entities.StudyPlan;
 import org.example.technihongo.enums.ActivityType;
@@ -281,6 +282,52 @@ public class StudyPlanController {
                     .body(ApiResponse.builder()
                             .success(false)
                             .message("Failed to delete StudyPlan: " + e.getMessage())
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message("Internal Server Error: " + e.getMessage())
+                            .build());
+        }
+    }
+
+    @PatchMapping("/update-status/{id}")
+    @PreAuthorize("hasRole('ROLE_Content Manager')")
+    public ResponseEntity<ApiResponse> updateStudyPlanStatus(
+            @PathVariable Integer id,
+            @RequestBody StudyPlanStatusDTO studyPlanStatusDTO,
+            @RequestHeader("Authorization") String authorizationHeader,
+            HttpServletRequest httpRequest) {
+        try{
+            studyPlanService.updateStudyPlanStatus(id, studyPlanStatusDTO);
+
+            String ipAddress = httpRequest.getRemoteAddr();
+            String userAgent = httpRequest.getHeader("User-Agent");
+            userActivityLogService.trackUserActivityLog(
+                    extractUserId(authorizationHeader),
+                    ActivityType.UPDATE,
+                    ContentType.StudyPlan,
+                    id,
+                    ipAddress,
+                    userAgent
+            );
+
+            return ResponseEntity.ok(ApiResponse.builder()
+                    .success(true)
+                    .message("StudyPlan updated successfully!")
+                    .build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message(e.getMessage())
+                            .build());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message("Failed to update StudyPlan: " + e.getMessage())
                             .build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -2,6 +2,7 @@ package org.example.technihongo.services.serviceimplements;
 
 import lombok.RequiredArgsConstructor;
 import org.example.technihongo.dto.CreateStudyPlanDTO;
+import org.example.technihongo.dto.StudyPlanStatusDTO;
 import org.example.technihongo.dto.UpdateStudyPlanDTO;
 import org.example.technihongo.entities.Course;
 import org.example.technihongo.entities.Lesson;
@@ -96,14 +97,6 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         StudyPlan studyPlan = studyPlanRepository.findById(studyPlanId)
                 .orElseThrow(() -> new RuntimeException("StudyPlan ID not found"));
 
-        boolean hasStudents = studentStudyPlanRepository.findAll().stream()
-                .anyMatch(s -> s.getStudyPlan().getStudyPlanId().equals(studyPlanId)
-                && s.getStatus().equals(StudyPlanStatus.ACTIVE));
-
-        if (Boolean.FALSE.equals(updateStudyPlanDTO.getIsActive()) && hasStudents) {
-            throw new RuntimeException("Cannot deactivate StudyPlan because students are currently enrolled.");
-        }
-
         if(studyPlan.isDefault() && !updateStudyPlanDTO.getIsDefault()){
             throw new RuntimeException("Cannot make default StudyPlan non-default.");
         }
@@ -111,7 +104,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         studyPlan.setTitle(updateStudyPlanDTO.getTitle());
         studyPlan.setDescription(updateStudyPlanDTO.getDescription());
         studyPlan.setHoursPerDay(updateStudyPlanDTO.getHoursPerDay());
-        studyPlan.setActive(updateStudyPlanDTO.getIsActive());
+//        studyPlan.setActive(updateStudyPlanDTO.getIsActive());
 
         if(updateStudyPlanDTO.getIsDefault()) {
             List<StudyPlan> studyPlanList = studyPlanRepository.findByCourse_CourseId(studyPlan.getCourse().getCourseId());
@@ -165,5 +158,22 @@ public class StudyPlanServiceImpl implements StudyPlanService {
     @Override
     public Course getCourseByStudyPlanId(Integer studyPlanId) {
         return studyPlanRepository.findByStudyPlanId(studyPlanId).getCourse();
+    }
+
+    @Override
+    public void updateStudyPlanStatus(Integer studyPlanId, StudyPlanStatusDTO studyPlanStatusDTO) {
+        StudyPlan studyPlan = studyPlanRepository.findById(studyPlanId)
+                .orElseThrow(() -> new RuntimeException("StudyPlan ID not found"));
+
+        boolean hasStudents = studentStudyPlanRepository.findAll().stream()
+                .anyMatch(s -> s.getStudyPlan().getStudyPlanId().equals(studyPlanId)
+                        && s.getStatus().equals(StudyPlanStatus.ACTIVE));
+
+        if (Boolean.FALSE.equals(studyPlanStatusDTO.getIsActive()) && hasStudents) {
+            throw new RuntimeException("Cannot deactivate StudyPlan because students are currently enrolled.");
+        }
+
+        studyPlan.setActive(studyPlanStatusDTO.getIsActive());
+        studyPlanRepository.save(studyPlan);
     }
 }

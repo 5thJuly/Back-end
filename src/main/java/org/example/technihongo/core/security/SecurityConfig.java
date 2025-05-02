@@ -85,7 +85,7 @@ public class SecurityConfig {
                                 "/*/study-plan/update/*", "/*/study-plan/delete/*", "/*/system-flashcard-set/create",
                                 "/*/system-flashcard-set/update/*", "/*/system-flashcard-set/delete/*", "/*/system-flashcard-set/updateOrder/*",
                                 "/*/system-flashcard-set/update-visibility/*", "/*/system-flashcard-set/all",
-                                "/*/script/update-order/*").hasRole("Content Manager")
+                                "/*/script/update-order/*", "/*/*/update-status/*", "/*/study-plan/update-status/*").hasRole("Content Manager")
 
 
                         .requestMatchers("/*/user/content-manager", "/*/*/*/overview", "/*/*/set-violated/*",
