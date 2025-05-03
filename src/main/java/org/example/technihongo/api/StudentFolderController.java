@@ -184,22 +184,75 @@ public class StudentFolderController {
         }
     }
 
-    @GetMapping("/getStudentFolder/{studentId}")
+    @GetMapping("/getStudentFolder")
     @PreAuthorize("hasRole('ROLE_Student')")
-    public ResponseEntity<ApiResponse> listAllStudentFolders(@PathVariable Integer studentId) {
+    public ResponseEntity<ApiResponse> listAllStudentFolders(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            List<StudentFolderDTO> folders = studentFolderService.listAllStudentFolders(studentId);
-            if (folders.isEmpty()) {
-                return ResponseEntity.ok(ApiResponse.builder()
-                        .success(false)
-                        .message("No student folders found")
-                        .build());
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring(7);
+                Integer userId = jwtUtil.extractUserId(token);
+                Integer studentId = studentService.getStudentIdByUserId(userId);
+
+                List<StudentFolderDTO> folders = studentFolderService.listAllStudentFolders(studentId);
+
+                if (folders.isEmpty()) {
+                    return ResponseEntity.ok(ApiResponse.builder()
+                            .success(false)
+                            .message("No student folders found")
+                            .build());
+                } else {
+                    return ResponseEntity.ok(ApiResponse.builder()
+                            .success(true)
+                            .message("Student folders retrieved successfully")
+                            .data(folders)
+                            .build());
+                }
             } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponse.builder()
+                                .success(false)
+                                .message("Unauthorized")
+                                .build());
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message(e.getMessage())
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.builder()
+                            .success(false)
+                            .message("Internal Server Error: " + e.getMessage())
+                            .build());
+        }
+    }
+
+    @GetMapping("/getStudentFolderById/{folderId}")
+    @PreAuthorize("hasRole('ROLE_Student')")
+    public ResponseEntity<ApiResponse> getStudentFolderById(
+            @PathVariable Integer folderId,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring(7);
+                Integer userId = jwtUtil.extractUserId(token);
+                Integer studentId = studentService.getStudentIdByUserId(userId);
+
+                StudentFolderDTO folder = studentFolderService.getStudentFolderById(studentId, folderId);
+
                 return ResponseEntity.ok(ApiResponse.builder()
                         .success(true)
-                        .message("Student folders retrieved successfully")
-                        .data(folders)
+                        .message("Student folder retrieved successfully")
+                        .data(folder)
                         .build());
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponse.builder()
+                                .success(false)
+                                .message("Unauthorized")
+                                .build());
             }
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

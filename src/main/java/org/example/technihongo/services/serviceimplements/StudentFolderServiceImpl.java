@@ -1,5 +1,6 @@
 package org.example.technihongo.services.serviceimplements;
 
+import org.example.technihongo.dto.FolderItemDTO;
 import org.example.technihongo.dto.StudentFolderDTO;
 import org.example.technihongo.entities.Student;
 import org.example.technihongo.entities.StudentFolder;
@@ -85,6 +86,14 @@ public class StudentFolderServiceImpl implements StudentFolderService {
     }
 
     @Override
+    public StudentFolderDTO getStudentFolderById(Integer studentId, Integer folderId) {
+        return studentFolderRepository.findById(folderId)
+                .filter(folder -> folder.getStudent().getStudentId().equals(studentId))
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new SecurityException("You do not have permission to access this folder or it does not exist"));
+    }
+
+    @Override
     public void deleteStudentFolder(Integer studentId, Integer folderId) {
         if (folderId == null) {
             throw new IllegalArgumentException("Folder ID cannot be null");
@@ -104,16 +113,11 @@ public class StudentFolderServiceImpl implements StudentFolderService {
 
     @Override
     public List<StudentFolderDTO> listAllStudentFolders(Integer studentId) {
-        if (studentId == null) {
-            throw new IllegalArgumentException("Student ID cannot be null");
-        }
-
         if (!studentRepository.existsById(studentId)) {
             throw new RuntimeException("Student not found with ID: " + studentId);
         }
 
         List<StudentFolder> folders = studentFolderRepository.findByStudentStudentId(studentId);
-
         return folders.stream()
                 .filter(folder -> !folder.isDeleted())
                 .map(this::convertToDTO)
