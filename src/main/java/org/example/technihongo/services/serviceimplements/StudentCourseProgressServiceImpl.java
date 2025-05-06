@@ -196,19 +196,13 @@ StudentCourseProgressServiceImpl implements StudentCourseProgressService {
 
         progress.setCompletedLessons(completedLessons);
 
-        // Tính completionPercentage dựa trên tổng phần trăm của các lesson
         BigDecimal totalLessonPercentage = lessonProgresses.stream()
                 .map(StudentLessonProgress::getCompletionPercentage)
-                .filter(Objects::nonNull) // Loại bỏ null nếu có
-                .reduce(BigDecimal.ZERO, BigDecimal::add); // Tổng tất cả completionPercentage
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal completionPercentage = totalLessonPercentage
-                .divide(BigDecimal.valueOf(totalLessons), 2, RoundingMode.HALF_UP); // Chia cho số lesson để lấy trung bình
+                .divide(BigDecimal.valueOf(totalLessons), 2, RoundingMode.HALF_UP);
         progress.setCompletionPercentage(completionPercentage);
-
-//        BigDecimal percentage = BigDecimal.valueOf(completedLessons)
-//                .divide(BigDecimal.valueOf(totalLessons), 2, RoundingMode.HALF_UP)
-//                .multiply(BigDecimal.valueOf(100));
-//        progress.setCompletionPercentage(percentage);
 
         if (currentLessonId != null) {
             Lesson currentLesson = lessonRepository.findById(currentLessonId)
@@ -216,16 +210,14 @@ StudentCourseProgressServiceImpl implements StudentCourseProgressService {
             progress.setCurrentLesson(currentLesson);
         }
         else {
-            // Tìm Lesson có IN_PROGRESS gần nhất dựa trên lessonOrder
             StudentLessonProgress latestInProgress = lessonProgresses.stream()
                     .filter(p -> p.getCompletionStatus().equals(CompletionStatus.IN_PROGRESS))
-                    .min(Comparator.comparing(p -> p.getLesson().getLessonOrder())) // Sắp xếp theo lessonOrder nhỏ nhất
+                    .min(Comparator.comparing(p -> p.getLesson().getLessonOrder()))
                     .orElse(null);
 
             if (latestInProgress != null) {
                 progress.setCurrentLesson(latestInProgress.getLesson());
             } else {
-                // Nếu không có IN_PROGRESS, chọn Lesson đầu tiên trong StudyPlan
                 Lesson firstLesson = lessonRepository
                         .findByStudyPlan_StudyPlanIdOrderByLessonOrderAsc(activePlan.getStudyPlan().getStudyPlanId())
                         .stream()
@@ -235,7 +227,6 @@ StudentCourseProgressServiceImpl implements StudentCourseProgressService {
             }
         }
 
-        // Cập nhật total_study_date
         LocalDateTime lastUpdate = progress.getUpdatedAt();
         LocalDateTime now = LocalDateTime.now();
         if (lastUpdate == null || !lastUpdate.toLocalDate().equals(now.toLocalDate())) {

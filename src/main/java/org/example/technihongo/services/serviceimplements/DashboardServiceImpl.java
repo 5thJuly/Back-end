@@ -53,12 +53,10 @@ public class DashboardServiceImpl implements DashboardService {
     public AdminOverviewDTO getAdminOverview() {
         AdminOverviewDTO dto = new AdminOverviewDTO();
 
-        // Total counts
         dto.setTotalStudents(studentRepository.count());
         dto.setTotalActiveCourses(courseRepository.countActiveCourses());
         dto.setTotalSubscriptionsSold(subscriptionRepository.count());
 
-        // Weekly revenue (7 days)
         LocalDateTime weekStart = LocalDate.now().minusDays(6).atStartOfDay();
         List<Object[]> dailyResults = paymentTransactionRepository.sumByDay(weekStart);
         Map<LocalDate, Double> dailyRevenueMap = dailyResults.stream()
@@ -73,10 +71,9 @@ public class DashboardServiceImpl implements DashboardService {
             Double revenue = dailyRevenueMap.getOrDefault(date, 0.0);
             weeklyRevenue.add(new AdminOverviewDTO.DailyRevenueDTO(date.toString(), revenue));
         }
-        weeklyRevenue.sort((a, b) -> b.getDate().compareTo(a.getDate())); // Sort descending
+        weeklyRevenue.sort((a, b) -> b.getDate().compareTo(a.getDate()));
         dto.setWeeklyRevenue(weeklyRevenue);
 
-        // Monthly revenue (4 weeks)
         LocalDateTime monthStart = LocalDate.now().minusWeeks(3).atStartOfDay();
         List<Object[]> weeklyResults = paymentTransactionRepository.sumByWeek(monthStart);
         Map<LocalDate, Double> weeklyRevenueMap = weeklyResults.stream()
@@ -94,10 +91,9 @@ public class DashboardServiceImpl implements DashboardService {
             String weekLabel = weekBegin.format(formatter) + " to " + weekEnd.format(formatter);
             monthlyRevenue.add(new AdminOverviewDTO.WeeklyRevenueDTO(weekLabel, revenue));
         }
-        monthlyRevenue.sort((a, b) -> b.getWeek().compareTo(a.getWeek())); // Sort descending
+        monthlyRevenue.sort((a, b) -> b.getWeek().compareTo(a.getWeek()));
         dto.setMonthlyRevenue(monthlyRevenue);
 
-        // Yearly revenue (12 months)
         LocalDateTime yearStart = LocalDate.now().minusMonths(11).atStartOfDay();
         List<Object[]> monthlyResults = paymentTransactionRepository.sumByMonth(yearStart);
         Map<LocalDate, Double> monthlyRevenueMap = monthlyResults.stream()
@@ -114,7 +110,7 @@ public class DashboardServiceImpl implements DashboardService {
             String monthLabel = month.format(DateTimeFormatter.ofPattern("yyyy-MM"));
             yearlyRevenue.add(new AdminOverviewDTO.MonthlyRevenueDTO(monthLabel, revenue));
         }
-        yearlyRevenue.sort((a, b) -> b.getMonth().compareTo(a.getMonth())); // Sort descending
+        yearlyRevenue.sort((a, b) -> b.getMonth().compareTo(a.getMonth()));
         dto.setYearlyRevenue(yearlyRevenue);
 
         return dto;
@@ -125,7 +121,6 @@ public class DashboardServiceImpl implements DashboardService {
     public LearningStatsDTO getLearningStats(Integer studentId) {
         LearningStatsDTO dto = new LearningStatsDTO();
 
-        // Weekly stats (7 days, detailed)
         LocalDate weekStart = LocalDate.now().minusDays(6);
         List<StudentDailyLearningLog> weeklyLogs = studentDailyLearningLogRepository.findByStudentIdAndDateRange(studentId, weekStart);
         Map<LocalDate, StudentDailyLearningLog> weeklyLogMap = weeklyLogs.stream()
@@ -145,10 +140,9 @@ public class DashboardServiceImpl implements DashboardService {
                     log != null && log.isDailyGoalAchieved()
             ));
         }
-        weeklyStats.sort((a, b) -> b.getDate().compareTo(a.getDate())); // Sort descending
+        weeklyStats.sort((a, b) -> b.getDate().compareTo(a.getDate()));
         dto.setWeeklyStats(weeklyStats);
 
-        // Monthly stats (4 weeks, aggregated)
         LocalDate monthStart = LocalDate.now().minusWeeks(3);
         List<Object[]> weeklyResults = studentDailyLearningLogRepository.sumByWeek(studentId, monthStart);
         Map<LocalDate, Object[]> weeklyStatsMap = weeklyResults.stream()
@@ -173,10 +167,9 @@ public class DashboardServiceImpl implements DashboardService {
                     stats != null ? ((Number) stats[5]).intValue() : 0
             ));
         }
-        monthlyStats.sort((a, b) -> b.getWeek().compareTo(a.getWeek())); // Sort descending
+        monthlyStats.sort((a, b) -> b.getWeek().compareTo(a.getWeek()));
         dto.setMonthlyStats(monthlyStats);
 
-        // Yearly stats (12 months, aggregated)
         LocalDate yearStart = LocalDate.now().minusMonths(11).withDayOfMonth(1);
         List<Object[]> monthlyResults = studentDailyLearningLogRepository.sumByMonth(studentId, yearStart);
         Map<LocalDate, Object[]> monthlyStatsMap = monthlyResults.stream()
@@ -200,7 +193,7 @@ public class DashboardServiceImpl implements DashboardService {
                     stats != null ? ((Number) stats[5]).intValue() : 0
             ));
         }
-        yearlyStats.sort((a, b) -> b.getMonth().compareTo(a.getMonth())); // Sort descending
+        yearlyStats.sort((a, b) -> b.getMonth().compareTo(a.getMonth()));
         dto.setYearlyStats(yearlyStats);
 
         return dto;
@@ -209,18 +202,15 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     @Transactional(readOnly = true)
     public List<QuizStatsDTO> getWeeklyQuizStats(Integer studentId) {
-        // Lấy dữ liệu từ 7 ngày gần nhất
         LocalDateTime startDate = LocalDate.now().minusDays(6).atStartOfDay();
         List<Object[]> results = studentQuizAttemptRepository.findAverageScoreByDay(studentId, startDate);
 
-        // Ánh xạ kết quả thành Map<LocalDate, Double>
         Map<LocalDate, Double> scoreMap = results.stream()
                 .collect(Collectors.toMap(
                         row -> row[0] instanceof Timestamp ? ((Timestamp) row[0]).toLocalDateTime().toLocalDate() : ((Date) row[0]).toLocalDate(),
                         row -> row[1] instanceof BigDecimal ? ((BigDecimal) row[1]).doubleValue() : ((Number) row[1]).doubleValue()
                 ));
 
-        // Tạo danh sách 7 ngày, điền điểm trung bình hoặc 0.0 nếu không có dữ liệu
         List<QuizStatsDTO> weeklyStats = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             LocalDate date = LocalDate.now().minusDays(i);
@@ -228,7 +218,6 @@ public class DashboardServiceImpl implements DashboardService {
             weeklyStats.add(new QuizStatsDTO(date.toString(), avgScore));
         }
 
-        // Sắp xếp theo ngày giảm dần
         weeklyStats.sort((a, b) -> b.getDate().compareTo(a.getDate()));
         return weeklyStats;
     }

@@ -80,14 +80,6 @@ public class LearningResourceServiceImpl implements LearningResourceService {
             throw new RuntimeException("User ID not found!");
         }
 
-//        Domain domain = domainRepository.findByDomainId(learningResourceDTO.getDomainId());
-//        if(domain == null){
-//            throw new RuntimeException("Domain ID not found!");
-//        }
-//        if(domain.getParentDomain() == null){
-//            throw new RuntimeException("Cannot assign parent domain!");
-//        }
-
         LearningResource resource = learningResourceRepository.save(LearningResource.builder()
                 .title(learningResourceDTO.getTitle())
                 .description(learningResourceDTO.getDescription())
@@ -109,14 +101,6 @@ public class LearningResourceServiceImpl implements LearningResourceService {
             throw new RuntimeException("Learning resource ID not found!");
         }
 
-//        Domain domain = domainRepository.findByDomainId(learningResourceDTO.getDomainId());
-//        if(domain == null){
-//            throw new RuntimeException("Domain ID not found!");
-//        }
-//        if(domain.getParentDomain() == null){
-//            throw new RuntimeException("Cannot assign parent domain!");
-//        }
-
         if(resource.isPublic()){
             throw new RuntimeException("Cannot update a public Learning resource!");
         }
@@ -137,7 +121,6 @@ public class LearningResourceServiceImpl implements LearningResourceService {
             throw new RuntimeException("Learning resource ID not found!");
         }
 
-        //resource.setPremium(learningResourceStatusDTO.getIsPremium());
         resource.setPublic(learningResourceStatusDTO.getIsPublic());
         learningResourceRepository.save(resource);
 

@@ -140,7 +140,7 @@ public class StudentCourseProgressController {
     }
 
     @GetMapping("/statistics/{courseId}")
-    @PreAuthorize("hasAnyRole('ROLE_Administrator', 'ROLE_Content Manager')")
+    @PreAuthorize("hasRole('ROLE_Content Manager')")
     public ResponseEntity<ApiResponse> viewCourseStatistics(
             @PathVariable Integer courseId) {
         try {

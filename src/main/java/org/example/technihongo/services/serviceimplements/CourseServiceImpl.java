@@ -95,7 +95,6 @@ public class CourseServiceImpl implements CourseService {
                 .creator(userRepository.findByUserId(creatorId))
                 .domain(domainRepository.findByDomainId(createCourseDTO.getDomainId()))
                 .difficultyLevel(difficultyLevelRepository.findByLevelId(createCourseDTO.getDifficultyLevelId()))
-//                .attachmentUrl(createCourseDTO.getAttachmentUrl())
                 .thumbnailUrl(createCourseDTO.getThumbnailUrl())
                 .estimatedDuration(createCourseDTO.getEstimatedDuration())
                 .isPremium(createCourseDTO.isPremium())

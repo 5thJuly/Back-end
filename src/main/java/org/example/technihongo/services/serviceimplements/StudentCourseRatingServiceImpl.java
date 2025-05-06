@@ -143,11 +143,7 @@ public class StudentCourseRatingServiceImpl implements StudentCourseRatingServic
         if (course == null) {
             throw new ResourceNotFoundException("Course not found with ID: " + courseId);
         }
-//        List<StudentCourseRating> ratings = studentCourseRatingRepository.findByCourseCourseId(courseId);
-//        return ratings.stream()
-//                .map(StudentCourseRating::getReview)
-//                .filter(review -> review != null && !review.isEmpty())
-//                .collect(Collectors.toList());
+
         Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
@@ -171,7 +167,7 @@ public class StudentCourseRatingServiceImpl implements StudentCourseRatingServic
 
     @Override
     public StudentCourseRatingDTO getRatingByStudentAndCourse(Integer studentId, Integer courseId) {
-        Student student = studentRepository.findById(studentId)
+        studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + studentId));
         Course course = courseRepository.findByCourseId(courseId);
         if (course == null) {

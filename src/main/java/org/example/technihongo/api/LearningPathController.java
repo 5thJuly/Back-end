@@ -414,7 +414,7 @@ public class LearningPathController {
     }
 
     @GetMapping("/creator")
-    @PreAuthorize("hasAnyRole('ROLE_Content Manager', 'ROLE_Administrator')")
+    @PreAuthorize("hasRole('ROLE_Content Manager')")
     public ResponseEntity<ApiResponse> getLearningPathListByCreator(
             @RequestHeader("Authorization") String authorizationHeader,
             @RequestParam(defaultValue = "") String keyword,

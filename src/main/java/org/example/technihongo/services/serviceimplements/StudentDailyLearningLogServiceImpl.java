@@ -47,17 +47,13 @@ public class StudentDailyLearningLogServiceImpl implements StudentDailyLearningL
             isNewLog = true;
         }
 
-        // Kiểm tra nếu đây là lần học đầu tiên trong ngày
         boolean isFirstStudyOfDay = isNewLog || dailyLog.getStudyTime() == 0;
 
-        // Cập nhật log
         updateDailyLog(dailyLog, studyTimeInput, student.getDailyGoal());
         dailyLogRepository.save(dailyLog);
 
-        // Cập nhật thống kê
         updateLearningStatistics(student, dailyLog, isNewLog);
 
-        // Kiểm tra và trao thành tựu streak cho lần học đầu tiên
         if (isFirstStudyOfDay) {
             achievementService.checkAndAssignStreakAchievements(studentId);
         }

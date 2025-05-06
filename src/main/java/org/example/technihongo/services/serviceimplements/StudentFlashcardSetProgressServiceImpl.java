@@ -54,13 +54,11 @@ public class StudentFlashcardSetProgressServiceImpl implements StudentFlashcardS
     @Override
     public FlashcardSetProgressDTO getStudentOrSystemSetProgress(Integer studentId, Integer setId, boolean isSystemSet) {
         if (!isSystemSet) {
-            // Lấy tiến độ của StudentFlashcardSet
             StudentFlashcardSetProgress progress = setProgressRepo
                     .findByStudentStudentIdAndStudentFlashcardSet_StudentSetId(studentId, setId)
                     .orElseThrow(() -> new RuntimeException("Student set progress not found for student ID " + studentId + " and set ID " + setId));
             return mapToDTO(progress);
         } else {
-            // Lấy tiến độ của SystemFlashcardSet
             StudentFlashcardSetProgress progress = setProgressRepo
                     .findByStudentStudentIdAndSystemFlashcardSet_SystemSetId(studentId, setId)
                     .orElseThrow(() -> new RuntimeException("System set progress not found for student ID " + studentId + " and set ID " + setId));
@@ -122,14 +120,12 @@ public class StudentFlashcardSetProgressServiceImpl implements StudentFlashcardS
             progress = existingProgressOpt.get();
         }
 
-        // Tính số thẻ đã học
         long cardStudied = isSystemSet
                 ? flashcardProgressRepo.findByStudentStudentIdAndFlashcard_SystemFlashCardSet_SystemSetId(studentId, setId)
                 .stream().filter(StudentFlashcardProgress::isLearned).count()
                 : flashcardProgressRepo.findByStudentStudentIdAndFlashcard_StudentFlashCardSet_StudentSetId(studentId, setId)
                 .stream().filter(StudentFlashcardProgress::isLearned).count();
 
-        // Kiểm tra lần đầu học thẻ trong StudentFlashcardSet
         boolean wasNotStudiedBefore = progress.getCardStudied() == 0 && cardStudied > 0;
         progress.setCardStudied((int) cardStudied);
         progress.setLastStudied(LocalDateTime.now());
@@ -189,7 +185,6 @@ public class StudentFlashcardSetProgressServiceImpl implements StudentFlashcardS
 
         setProgressRepo.save(progress);
 
-        // Kiểm tra thành tựu "Tập sự ghép thẻ" khi học thẻ đầu tiên
         if (!isSystemSet && wasNotStudiedBefore) {
             achievementService.checkAndAssignFirstFlashcardAchievement(studentId, setId);
         }
@@ -299,7 +294,6 @@ public class StudentFlashcardSetProgressServiceImpl implements StudentFlashcardS
 
     private FlashcardSetProgressDTO mapToDTO(StudentFlashcardSetProgress progress) {
         if (progress.getStudentFlashcardSet() != null) {
-            // Trường hợp StudentFlashcardSet
             StudentFlashcardSet set = progress.getStudentFlashcardSet();
             long cardStudied = flashcardProgressRepo
                     .findByStudentStudentIdAndFlashcard_StudentFlashCardSet_StudentSetId(
@@ -317,10 +311,9 @@ public class StudentFlashcardSetProgressServiceImpl implements StudentFlashcardS
                     .lastStudied(progress.getLastStudied())
                     .studyCount(progress.getStudyCount())
                     .completionStatus(CompletionStatus.valueOf(progress.getCompletionStatus().toString()))
-                    .isSystemSet(false) // StudentFlashcardSet
+                    .isSystemSet(false)
                     .build();
         } else if (progress.getSystemFlashcardSet() != null) {
-            // Trường hợp SystemFlashcardSet
             SystemFlashcardSet set = progress.getSystemFlashcardSet();
             long cardStudied = flashcardProgressRepo
                     .findByStudentStudentIdAndFlashcard_SystemFlashCardSet_SystemSetId(
@@ -338,7 +331,7 @@ public class StudentFlashcardSetProgressServiceImpl implements StudentFlashcardS
                     .lastStudied(progress.getLastStudied())
                     .studyCount(progress.getStudyCount())
                     .completionStatus(CompletionStatus.valueOf(progress.getCompletionStatus().toString()))
-                    .isSystemSet(true) // SystemFlashcardSet
+                    .isSystemSet(true)
                     .build();
         } else {
             throw new RuntimeException("Progress is not associated with any FlashcardSet");

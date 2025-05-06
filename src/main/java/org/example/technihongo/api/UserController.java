@@ -372,7 +372,7 @@ public class UserController {
         }
     }
     @GetMapping("/paginated")
-    @PreAuthorize("hasAnyRole('ROLE_Content Manager', 'ROLE_Administrator')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> getAllUsersPaginated(
             @RequestHeader("Authorization") String authorizationHeader,
             HttpServletRequest httpRequest,
@@ -435,7 +435,7 @@ public class UserController {
     }
 
     @GetMapping("/student/paginated")
-    @PreAuthorize("hasAnyRole('ROLE_Content Manager', 'ROLE_Administrator')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> getStudentUsersPaginated(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -466,7 +466,7 @@ public class UserController {
     }
 
     @GetMapping("/content-managers/paginated")
-    @PreAuthorize("hasAnyRole('ROLE_Content Manager', 'ROLE_Administrator')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> getContentManagerUsersPaginated(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -590,7 +590,7 @@ public class UserController {
     }
 
     @GetMapping("/searchContentManagerName")
-    @PreAuthorize("hasAnyRole('ROLE_Content Manager', 'ROLE_Administrator')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> searchContentManager(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int pageNo,

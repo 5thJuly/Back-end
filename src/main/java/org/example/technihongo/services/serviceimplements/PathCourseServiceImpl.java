@@ -152,26 +152,6 @@ public class PathCourseServiceImpl implements PathCourseService {
         pathCourseRepository.saveAll(pathCourses);
     }
 
-//    @Override
-//    public void updatePathCourseOrder(Integer pathId, UpdatePathCourseOrderDTO updatePathCourseOrderDTO) {
-//        if(learningPathRepository.findByPathId(pathId) == null){
-//            throw new RuntimeException("LearningPath ID not found!");
-//        }
-//
-//        List<PathCourse> pathCourses = pathCourseRepository.findByLearningPath_PathIdOrderByCourseOrderAsc(pathId);
-//        List<Integer> newOrder = updatePathCourseOrderDTO.getNewPathCourseOrder();
-//
-//        if (pathCourses.size() != newOrder.size()) {
-//            throw new IllegalArgumentException("PathCourse count does not match newOrder!");
-//        }
-//
-//        for (int i = 0; i < pathCourses.size(); i++) {
-//            pathCourses.get(i).setCourseOrder(newOrder.get(i));
-//        }
-//
-//        pathCourseRepository.saveAll(pathCourses);
-//    }
-
     @Override
     @Transactional
     public void deletePathCourse(Integer pathCourseId) {

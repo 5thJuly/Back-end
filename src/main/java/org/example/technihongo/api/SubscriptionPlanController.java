@@ -33,7 +33,7 @@ public class SubscriptionPlanController {
     private UserActivityLogService userActivityLogService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ROLE_Administrator', 'ROLE_Content Manager')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> createSubscriptionPlan(
             @RequestBody SubscriptionDTO subscriptionDTO,
             @RequestHeader("Authorization") String authorizationHeader,
@@ -66,7 +66,7 @@ public class SubscriptionPlanController {
         }
     }
     @PatchMapping("/update/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_Administrator', 'ROLE_Content Manager')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> updateSubscriptionPlan(
             @PathVariable Integer id,
             @RequestBody UpdateSubscriptionDTO updateDTO,
@@ -106,7 +106,7 @@ public class SubscriptionPlanController {
         }
     }
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_Administrator', 'ROLE_Content Manager')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> deleteSubscriptionPlan(
             @PathVariable Integer id,
             @RequestHeader("Authorization") String authorizationHeader,

@@ -132,7 +132,7 @@ public class StudentCourseRatingController {
     }
 
     @GetMapping("/allRating")
-    @PreAuthorize("hasAnyRole('ROLE_Administrator', 'ROLE_Content Manager')")
+    @PreAuthorize("hasRole('ROLE_Content Manager')")
     public ResponseEntity<ApiResponse> getAllRatings() {
         try {
             List<StudentCourseRatingDTO> response = studentCourseRatingService.getAllRatings();

@@ -298,7 +298,7 @@ public class QuizController {
     }
 
     @GetMapping("/creator")
-    @PreAuthorize("hasAnyRole('ROLE_Content Manager', 'ROLE_Administrator')")
+    @PreAuthorize("hasRole('ROLE_Content Manager')")
     public ResponseEntity<ApiResponse> getQuizListByCreator(@RequestHeader("Authorization") String authorizationHeader) throws Exception {
         try{
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

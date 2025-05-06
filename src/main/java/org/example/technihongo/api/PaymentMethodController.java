@@ -20,7 +20,7 @@ public class PaymentMethodController {
     private PaymentMethodService paymentMethodService;
 
     @PatchMapping("/{methodId}/update")
-    @PreAuthorize("hasAnyRole('ROLE_Content Manager', 'ROLE_Administrator')")
+    @PreAuthorize("hasRole('ROLE_Administrator')")
     public ResponseEntity<ApiResponse> updatePaymentMethod(
             @PathVariable Integer methodId,
             @RequestBody UpdatePaymentMethodRequestDTO request) {

@@ -55,19 +55,6 @@ public class StudentResourceProgressServiceImpl implements StudentResourceProgre
         } else {
             progress = existingProgressOpt.get();
             progress.setLastStudied(LocalDateTime.now());
-
-//            if(progress.getNotes() != null) {
-//                progress.setNotes(notes);
-//            }
-
-//            if (progress.getCompletionStatus() != CompletionStatus.COMPLETED) {
-//                progress.setCompletionStatus(CompletionStatus.COMPLETED);
-//                StudentDailyLearningLog dailyLog = dailyLogRepository.findByStudentStudentIdAndLogDate(studentId, LocalDate.now()).get();
-//                dailyLog.setCompletedResources(dailyLog.getCompletedResources() + 1);
-//                dailyLogRepository.save(dailyLog);
-//                userActivityLogService.trackUserActivityLog(userRepository.findByStudentStudentId(studentId).getUserId(),
-//                        ActivityType.COMPLETE, ContentType.LearningResource, resourceId, null, null);
-//            }
         }
 
         studentResourceProgressRepository.save(progress);
@@ -89,10 +76,6 @@ public class StudentResourceProgressServiceImpl implements StudentResourceProgre
         } else {
             progress = existingProgressOpt.get();
             progress.setLastStudied(LocalDateTime.now());
-
-//            if(progress.getNotes() != null) {
-//                progress.setNotes(notes);
-//            }
 
             if (progress.getCompletionStatus() != CompletionStatus.COMPLETED) {
                 progress.setCompletionStatus(CompletionStatus.COMPLETED);

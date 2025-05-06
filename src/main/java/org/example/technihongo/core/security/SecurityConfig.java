@@ -85,26 +85,24 @@ public class SecurityConfig {
                                 "/*/study-plan/update/*", "/*/study-plan/delete/*", "/*/system-flashcard-set/create",
                                 "/*/system-flashcard-set/update/*", "/*/system-flashcard-set/delete/*", "/*/system-flashcard-set/updateOrder/*",
                                 "/*/system-flashcard-set/update-visibility/*", "/*/system-flashcard-set/all",
-                                "/*/script/update-order/*", "/*/*/update-status/*", "/*/study-plan/update-status/*").hasRole("Content Manager")
+                                "/*/script/update-order/*", "/*/*/update-status/*", "/*/study-plan/update-status/*",
+                                "/*/student-course-rating/allRating", "/*/learning-path/creator", "/*/learning-resource/creator",
+                                "/*/quiz/creator", "/*/course-progress/statistics/*").hasRole("Content Manager")
 
 
                         .requestMatchers("/*/user/content-manager", "/*/*/*/overview", "/*/*/set-violated/*",
                                 "/*/violation/all", "/*/violation/handle/*", "/*/violation/summary",
                                 "/*/activity-log/user/*", "/*/*/most-popular-plan", "/*/*/revenue-by-plan",
-                                "/*/*/revenue-by-period").hasRole("Administrator")
+                                "/*/*/revenue-by-period", "/*/subscription/create", "/*/subscription/update/*",
+                                "/*/subscription/delete/*", "/*/user/paginated", "/*/user/student/*",
+                                "/*/user/content-managers/*", "/*/user/searchContentManagerName",
+                                "/*/payment-method/*/update").hasRole("Administrator")
 
 
                         .requestMatchers("/*/flashcard/*/update", "/*/flashcard/delete/*", "/*/option/question/*",
                                 "/*/option/{id:[0-9]+}", "/*/question/{id:[0-9]+}", "/*/quiz/{id:[0-9]+}",
                                 "/*/quiz-question/quiz/*", "/*/quiz-question/{id:[0-9]+}", "/*/*/questions-options/{id:[0-9]+}",
                                 "/*/violation/report").hasAnyRole("Student", "Content Manager")
-
-
-                        .requestMatchers("/*/user/paginated", "/*/user/student/*", "/*/user/content-managers/*",
-                                "/*/user/searchContentManagerName", "/*/learning-path/creator", "/*/learning-resource/creator",
-                                "/*/payment-method/*/update", "/*/quiz/creator",
-                                "/*/course-progress/statistics/*", "/*/student-course-rating/allRating",
-                                "/*/subscription/create", "/*/subscription/update/*", "/*/subscription/delete/*").hasAnyRole("Content Manager", "Administrator")
 
 
                         .requestMatchers("/*/statistics/view", "/*/student-course-rating/delete/*").hasAnyRole("Student", "Administrator")

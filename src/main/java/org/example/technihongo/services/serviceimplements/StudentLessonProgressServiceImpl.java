@@ -117,7 +117,6 @@ public class StudentLessonProgressServiceImpl implements StudentLessonProgressSe
             statistics.setTotalCompletedLessons(statistics.getTotalCompletedLessons() + 1);
             statisticsRepository.save(statistics);
 
-            // Mở Lesson kế tiếp nếu không phải StudyPlan default
             StudyPlan studyPlan = progress.getLesson().getStudyPlan();
             if (!studyPlan.isDefault()) {
                 Lesson nextLesson = lessonRepository.findFirstByStudyPlanStudyPlanIdAndLessonOrderGreaterThanOrderByLessonOrderAsc(
