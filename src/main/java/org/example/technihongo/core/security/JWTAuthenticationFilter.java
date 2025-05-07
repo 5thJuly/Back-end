@@ -31,6 +31,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Bỏ qua endpoint /api/user/login
+        if (request.getServletPath().equals("/api/user/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String requestHeader = request.getHeader("Authorization");
         logger.info(" Header :  {}", requestHeader);
@@ -41,6 +46,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             token = requestHeader.substring(7);
             try {
                 email = jwtHelper.getEmailFromToken(token);
+                logger.info("Extracted email from token: {}", email);
             } catch (IllegalArgumentException | ExpiredJwtException | MalformedJwtException e) {
                 logger.info("JWT Token error: {}", e.getMessage());
             }

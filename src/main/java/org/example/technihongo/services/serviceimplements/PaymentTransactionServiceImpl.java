@@ -110,10 +110,6 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
         if (!activeSubscriptions.isEmpty()) {
             throw new IllegalStateException("Student already has an active subscription. You can renewal your subscription if you want to continue Learning so far!!.");
         }
-
-
-
-
         List<PaymentTransaction> pendingTransactions = paymentTransactionRepository
                 .findBySubscription_Student_StudentIdAndTransactionStatus(studentId, TransactionStatus.PENDING);
 

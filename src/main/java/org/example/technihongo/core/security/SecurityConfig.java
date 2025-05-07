@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/api/v1/payment/callback", "/api/v1/payment/ipn-handler",
-                                "/*/*/login", "/*/*/register", "/*/*/logout", "/*/*/google-auth",
+                                "/api/*/login", "/*/*/register", "/*/*/logout", "/*/*/google-auth",
                                 "/*/*/getUser/*", "/*/user/*/username", "/*/user/searchStudentName",
                                 "/*/user/getUserByStudentId/*", "/*/user/*/password", "/*/user/forgot-password",
                                 "/*/user/reset-password", "/*/user/resend-verification-email", "/*/user/verify-email",
