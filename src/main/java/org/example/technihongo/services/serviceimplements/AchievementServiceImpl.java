@@ -30,6 +30,7 @@ public class AchievementServiceImpl implements AchievementService {
     private final StudentFlashcardSetRepository studentFlashcardSetRepository;
     private final StudentCourseProgressRepository studentCourseProgressRepository;
     private final StudentFavoriteRepository studentFavoriteRepository;
+    private final StudentLearningStatisticsRepository learningStatisticsRepository;
 
     private static final LocalTime NIGHT_OWL_TIME = LocalTime.of(22, 30);
     private static final LocalTime EARLY_BIRD_TIME = LocalTime.of(7, 30);
@@ -105,6 +106,10 @@ public class AchievementServiceImpl implements AchievementService {
                     .createdAt(LocalDateTime.now())
                     .build();
             userActivityLogRepository.save(activityLog);
+
+            StudentLearningStatistics statistics = learningStatisticsRepository.findByStudentStudentId(studentId).get();
+            statistics.setTotalAchievementsUnlocked(statistics.getTotalAchievementsUnlocked() + 1);
+            learningStatisticsRepository.save(statistics);
         }
 
         return new StudentAchievementDTO(
