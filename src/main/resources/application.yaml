@@ -14,7 +14,7 @@ payment:
     url: ${PAY_URL:https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}
     tmnCode: ${TMN_CODE:58X4B4HP}
     secretKey: ${SECRET_KEY:VRLDWNVWDNPCOEPBZUTWSEDQAGXJCNGZ}
-    returnUrl: ${RETURN_URL:https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/vn-pay-callback}
+    returnUrl: ${RETURN_URL:https://back-end-1-iztq.onrender.com/api/v1/payment/vn-pay-callback}
     version: ${VERSION:2.1.0}
     command: ${COMMAND:pay}
     orderType: ${ORDER_TYPE:other}
@@ -30,8 +30,8 @@ payment:
       partner-code: MOMOLRJZ20181206
       access-key: mTCKt9W3eU1m39TW
       secret-key: SetA5RDnLHvt51AULf51DyauxUo3kDU6
-      return-url: https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/callback
-      ipn-url: https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/ipn-handler
+      return-url: https://back-end-1-iztq.onrender.com/api/v1/payment/callback
+      ipn-url: https://back-end-1-iztq.onrender.com/api/v1/payment/ipn-handler
       request-type: captureWallet
       endpoint: https://test-payment.momo.vn/v2/gateway/api
       create-url: /create

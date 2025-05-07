@@ -230,15 +230,15 @@ public class PaymentTransactionController {
             }
 
             if ("0".equals(callbackDTO.getResultCode())) {
-                response.sendRedirect("https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/success?orderId=" + callbackDTO.getOrderId());
+                response.sendRedirect("https://back-end-1-iztq.onrender.com/api/v1/payment/success?orderId=" + callbackDTO.getOrderId());
             } else {
-                response.sendRedirect("https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/failed?orderId=" + callbackDTO.getOrderId()
+                response.sendRedirect("https://back-end-1-iztq.onrender.com/api/v1/payment/failed?orderId=" + callbackDTO.getOrderId()
                         + "&message=" + URLEncoder.encode(callbackDTO.getMessage(), StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
             log.error("Error processing MoMo callback: {}", e.getMessage(), e);
             try {
-                response.sendRedirect("https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/failed?message="
+                response.sendRedirect("https://back-end-1-iztq.onrender.com/api/v1/payment/failed?message="
                         + URLEncoder.encode("Server error: " + e.getMessage(), StandardCharsets.UTF_8));
             } catch (IOException ex) {
                 log.error("Failed to redirect after error: {}", ex.getMessage());
@@ -325,16 +325,16 @@ public class PaymentTransactionController {
             }
 
             if ("00".equals(responseCode)) {
-                response.sendRedirect("https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/success?orderId=" + orderId);
+                response.sendRedirect("https://back-end-1-iztq.onrender.com/api/v1/payment/success?orderId=" + orderId);
             } else {
                 String message = request.getOrDefault("vnp_OrderInfo", "Payment failed");
-                response.sendRedirect("https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/failed?orderId=" + orderId
+                response.sendRedirect("https://back-end-1-iztq.onrender.com/api/v1/payment/failed?orderId=" + orderId
                         + "&message=" + URLEncoder.encode(message, StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
             log.error("Error processing VNPay callback: {}", e.getMessage(), e);
             try {
-                response.sendRedirect("https://technihongo-hueze5fkd5g2f7bk.centralindia-01.azurewebsites.net/api/v1/payment/failed?message="
+                response.sendRedirect("https://back-end-1-iztq.onrender.com/api/v1/payment/failed?message="
                         + URLEncoder.encode("Server error: " + e.getMessage(), StandardCharsets.UTF_8));
             } catch (IOException ex) {
                 log.error("Failed to redirect after error: {}", ex.getMessage());
