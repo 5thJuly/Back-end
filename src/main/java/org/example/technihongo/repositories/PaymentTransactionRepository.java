@@ -55,6 +55,8 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
     List<PaymentTransaction> findAllBySubscription_SubscriptionPlanAndTransactionStatus(SubscriptionPlan plan, TransactionStatus status);
 
     List<PaymentTransaction> findAllByTransactionStatus(TransactionStatus status);
+
+    boolean existsByExternalOrderId(String orderId);
 }
 
 

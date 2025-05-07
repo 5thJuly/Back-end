@@ -187,35 +187,59 @@ public class VNPayServiceImpl implements VNPayService {
     public RenewSubscriptionResponseDTO initiateRenewalVNPay(Integer studentId, RenewSubscriptionRequestDTO requestDTO, HttpServletRequest request) {
         logger.info("Initiating VNPay renewal for studentId: {}, subPlanId: {}", studentId, requestDTO.getSubPlanId());
 
+        // Lấy tất cả subscriptions của student
         List<StudentSubscription> allSubscriptions = studentSubscriptionRepository
-                .findAllByStudent_StudentIdAndIsActiveTrueOrEndDateAfter(studentId, LocalDateTime.now(), Pageable.unpaged());
-        long renewalCount = allSubscriptions.size() - 1; // Trừ subscription đầu tiên
+                .findAllByStudentStudentId(studentId, Pageable.unpaged());
+        logger.info("Found {} subscriptions for studentId: {}", allSubscriptions.size(), studentId);
+
+        // Tìm subscription đầu tiên (dựa trên startDate sớm nhất)
+        Optional<StudentSubscription> firstSubscription = allSubscriptions.stream()
+                .min(Comparator.comparing(StudentSubscription::getStartDate));
+        if (firstSubscription.isEmpty()) {
+            throw new RuntimeException("No subscriptions found for student ID: " + studentId);
+        }
+
+        // Đếm số lần gia hạn (subscriptions sau subscription đầu tiên)
+        long renewalCount = allSubscriptions.stream()
+                .filter(sub -> sub.getStartDate().isAfter(firstSubscription.get().getStartDate()))
+                .count();
+        logger.info("Calculated renewalCount: {} for studentId: {}", renewalCount, studentId);
+
         if (renewalCount >= 3) {
             throw new RuntimeException("Hãy dành thời gian và học thật kỹ khóa học trước khi gia hạn thêm nhé");
         }
 
+        // Kiểm tra subscription hiện tại
         StudentSubscription currentSubscription = studentSubscriptionRepository
                 .findByStudent_StudentIdAndIsActiveTrue(studentId);
         if (currentSubscription == null) {
             throw new RuntimeException("No active subscription found for student ID: " + studentId);
         }
 
+        // Kiểm tra giao dịch đang chờ xử lý
         List<PaymentTransaction> pendingTransactions = paymentTransactionRepository
                 .findBySubscription_Student_StudentIdAndTransactionStatus(studentId, TransactionStatus.PENDING);
         if (!pendingTransactions.isEmpty()) {
             throw new RuntimeException("There is already a pending renewal transaction for this subscription");
         }
 
+        // Lấy subscription plan
         SubscriptionPlan plan = subscriptionPlanRepository.findById(requestDTO.getSubPlanId())
                 .orElseThrow(() -> new RuntimeException("Subscription plan not found: " + requestDTO.getSubPlanId()));
 
+        // Kiểm tra phương thức thanh toán
         PaymentMethod vnpayMethod = paymentMethodRepository.findByCode(PaymentMethodCode.VNPay_Bank);
         if (vnpayMethod == null || !vnpayMethod.getName().equals(PaymentMethodType.VNPay) || !vnpayMethod.isActive()) {
             throw new IllegalStateException("VNPay payment method is not available or inactive");
         }
 
-        String orderId = "RENEW-" + System.currentTimeMillis();
+        // Tạo orderId duy nhất
+        String orderId;
+        do {
+            orderId = "RENEW-" + UUID.randomUUID().toString();
+        } while (paymentTransactionRepository.existsByExternalOrderId(orderId));
 
+        // Tạo giao dịch
         PaymentTransaction transaction = PaymentTransaction.builder()
                 .subscription(currentSubscription)
                 .paymentMethod(vnpayMethod)
@@ -228,12 +252,14 @@ public class VNPayServiceImpl implements VNPayService {
                 .build();
         transaction = paymentTransactionRepository.save(transaction);
 
+        // Tạo tham số VNPay
         Map<String, String> vnpParams = getVNPayConfig(vnp_ReturnUrl);
         vnpParams.put("vnp_Amount", String.valueOf(plan.getPrice().multiply(BigDecimal.valueOf(100)).longValue()));
         vnpParams.put("vnp_TxnRef", orderId);
         vnpParams.put("vnp_OrderInfo", "Gia hạn gói: " + plan.getName());
         vnpParams.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
 
+        // Tạo URL thanh toán
         String queryUrl = VNPayUtil.getPaymentURL(vnpParams, true);
         String hashData = VNPayUtil.getPaymentURL(vnpParams, false);
         String vnpSecureHash = VNPayUtil.hmacSHA512(secretKey, hashData);

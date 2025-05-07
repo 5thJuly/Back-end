@@ -57,20 +57,31 @@ public class StudentSubscriptionServiceImpl implements StudentSubscriptionServic
 
     @Override
     public RenewSubscriptionResponseDTO initiateRenewal(Integer studentId, RenewSubscriptionRequestDTO request) {
-        // Kiểm tra số lần gia hạn
+        log.info("Initiating MoMo renewal for studentId: {}, subPlanId: {}", studentId, request.getSubPlanId());
+
+        // Lấy tất cả subscriptions thỏa mãn điều kiện
         List<StudentSubscription> allSubscriptions = subscriptionRepository
                 .findAllByStudent_StudentIdAndIsActiveTrueOrEndDateAfter(studentId, LocalDateTime.now(), Pageable.unpaged());
+        log.info("Found {} subscriptions for studentId: {}", allSubscriptions.size(), studentId);
+        allSubscriptions.forEach(sub -> log.info("Subscription: id={}, startDate={}, endDate={}, isActive={}",
+                sub.getSubscriptionId(), sub.getStartDate(), sub.getEndDate(), sub.getIsActive()));
+
+        // Tính số lần gia hạn
         long renewalCount = allSubscriptions.size() - 1;
-        if (renewalCount >= 3) {
+        log.info("Calculated renewalCount: {} for studentId: {}", renewalCount, studentId);
+
+        if (renewalCount >= 4) {
             throw new RuntimeException("Hãy dành thời gian và học thật kỹ khóa học trước khi gia hạn thêm nhé");
         }
 
+        // Kiểm tra subscription hiện tại
         StudentSubscription currentSubscription = subscriptionRepository
                 .findByStudent_StudentIdAndIsActiveTrue(studentId);
         if (currentSubscription == null) {
             throw new RuntimeException("No active subscription found for student ID: " + studentId);
         }
 
+        // Kiểm tra giao dịch đang chờ xử lý
         List<PaymentTransaction> pendingTransactions = paymentTransactionRepository
                 .findBySubscription_SubscriptionIdAndTransactionStatus(
                         currentSubscription.getSubscriptionId(), TransactionStatus.PENDING);
@@ -78,16 +89,20 @@ public class StudentSubscriptionServiceImpl implements StudentSubscriptionServic
             throw new RuntimeException("Đang có giao dịch đang chờ xử lý cho gói đăng ký này. Vui lòng kiểm tra lại sau.");
         }
 
+        // Lấy subscription plan
         SubscriptionPlan plan = subscriptionPlanRepository.findById(request.getSubPlanId())
                 .orElseThrow(() -> new RuntimeException("Subscription plan not found: " + request.getSubPlanId()));
 
+        // Kiểm tra phương thức thanh toán
         PaymentMethod momoMethod = paymentMethodRepository.findByCode(PaymentMethodCode.MOMO_QR);
         if (momoMethod == null || !momoMethod.getName().equals(PaymentMethodType.MomoPay) || !momoMethod.isActive()) {
             throw new IllegalStateException("MoMo payment method is not available or inactive");
         }
 
+        // Tạo orderId
         String orderId = "RENEW-" + System.currentTimeMillis() + "-" + request.getSubPlanId();
 
+        // Tạo giao dịch
         PaymentTransaction transaction = PaymentTransaction.builder()
                 .subscription(currentSubscription)
                 .paymentMethod(momoMethod)
@@ -99,6 +114,7 @@ public class StudentSubscriptionServiceImpl implements StudentSubscriptionServic
                 .build();
         paymentTransactionRepository.save(transaction);
 
+        // Gọi MoMo để tạo QR
         String orderInfo = "Gia hạn gói: " + plan.getName();
         CreateMomoResponse momoResponse = momoService.createPaymentQR(orderId, orderInfo, plan.getPrice().longValue());
 

@@ -1,5 +1,6 @@
 package org.example.technihongo.repositories;
 
+import feign.Param;
 import org.example.technihongo.entities.StudentSubscription;
 import org.example.technihongo.entities.SubscriptionPlan;
 import org.springframework.data.domain.Page;
@@ -28,8 +29,14 @@ public interface StudentSubscriptionRepository extends JpaRepository<StudentSubs
 
     List<StudentSubscription> findByStudentStudentIdAndIsActive(Integer studentId, Boolean isActive);
 
+    @Query("SELECT s FROM StudentSubscription s WHERE s.student.studentId = :studentId " +
+            "AND (s.isActive = true OR s.endDate > :now)")
     List<StudentSubscription> findAllByStudent_StudentIdAndIsActiveTrueOrEndDateAfter(
-            Integer studentId, LocalDateTime endDate, Pageable pageable);
+            @Param("studentId") Integer studentId,
+            @Param("now") LocalDateTime now,
+            Pageable pageable);
 
     Long countBySubscriptionPlan(SubscriptionPlan plan);
+
+    List<StudentSubscription> findAllByStudentStudentId(Integer studentId, Pageable unpaged);
 }
