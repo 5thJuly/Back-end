@@ -193,6 +193,7 @@ public class LessonResourceServiceImpl implements LessonResourceService {
                     .type("LearningResource")
                     .typeOrder(lessonResourceRepository.countByLesson_LessonId(lesson.getLessonId()) + 1)
                     .learningResource(learningResource)
+                    .isActive(createLessonResourceDTO.getIsActive())
                     .build());
         }
         else if(systemFlashcardSet != null){
@@ -201,6 +202,7 @@ public class LessonResourceServiceImpl implements LessonResourceService {
                     .type("FlashcardSet")
                     .typeOrder(lessonResourceRepository.countByLesson_LessonId(lesson.getLessonId()) + 1)
                     .systemFlashCardSet(systemFlashcardSet)
+                    .isActive(createLessonResourceDTO.getIsActive())
                     .build());
         }
         else {
@@ -209,6 +211,7 @@ public class LessonResourceServiceImpl implements LessonResourceService {
                     .type("Quiz")
                     .typeOrder(lessonResourceRepository.countByLesson_LessonId(lesson.getLessonId()) + 1)
                     .quiz(quiz)
+                    .isActive(createLessonResourceDTO.getIsActive())
                     .build());
         }
 

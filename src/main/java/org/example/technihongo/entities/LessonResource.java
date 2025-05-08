@@ -44,7 +44,7 @@ public class LessonResource {
     @JoinColumn(name = "quiz_id", referencedColumnName = "quiz_id", nullable = true)
     private Quiz quiz;
 
-    @Builder.Default
+//    @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean isActive = false;
 

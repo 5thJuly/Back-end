@@ -12,4 +12,5 @@ public class CreateLessonResourceDTO {
     private Integer resourceId;
     private Integer systemSetId;
     private Integer quizId;
+    private Boolean isActive;
 }
