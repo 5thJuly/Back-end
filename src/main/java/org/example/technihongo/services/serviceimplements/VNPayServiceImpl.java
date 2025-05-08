@@ -233,7 +233,6 @@ public class VNPayServiceImpl implements VNPayService {
             throw new IllegalStateException("VNPay payment method is not available or inactive");
         }
 
-        // Tạo orderId duy nhất
         String orderId;
         do {
             orderId = "RENEW-" + UUID.randomUUID().toString();
