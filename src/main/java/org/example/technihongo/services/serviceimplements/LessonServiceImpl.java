@@ -93,7 +93,7 @@ public class LessonServiceImpl implements LessonService {
         List<Integer> newOrder = updateLessonOrderDTO.getNewLessonOrder();
 
         if (lessons.size() != newOrder.size()) {
-            throw new IllegalArgumentException("Lesson count does not match newOrder!");
+            throw new RuntimeException("Lesson count does not match newOrder!");
         }
 
         for (int i = 0; i < lessons.size(); i++) {
