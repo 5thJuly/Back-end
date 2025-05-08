@@ -311,7 +311,7 @@ public class PaymentTransactionController {
         }
     }
 
-    @PostMapping("/vn-pay-callback")
+    @GetMapping("/vn-pay-callback")
     public void handleVNPayReturn(@RequestParam Map<String, String> request, HttpServletResponse response) {
         try {
             log.info("Received VNPay callback: {}", request);
