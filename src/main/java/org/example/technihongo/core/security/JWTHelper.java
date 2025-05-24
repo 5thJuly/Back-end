@@ -3,7 +3,6 @@ package org.example.technihongo.core.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.example.technihongo.repositories.AuthTokenRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ public class JWTHelper {
     //requirement :
     public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 60;
 
-    private String secret = "qwertyuiopasdfghjklzxcvbnm1234567890poiuytrewqlkjhgfdsamnbvcxz1234567890pokmnjhbgvfcdxsza";
+    private String secret = "<your_secret_key>";
 
     public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

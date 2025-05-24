@@ -20,20 +20,20 @@ public class EmailService {
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom("technihongo.work@gmail.com");
+        message.setFrom("<YOUR_EMAIL>");
         mailSender.send(message);
     }
 
     public void sendVerificationEmail(String email, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
-        String link = "https://technihongo.vercel.app/verify/" + token;
+        String link = "<your-fe-deployment-link>" + token;
         String subject = "Xác nhận tài khoản email";
         String body = "Vui lòng nhấn vào link để xác nhận tài khoản của bạn: " + link;
 
         message.setTo(email);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom("technihongo.work@gmail.com");
+        message.setFrom("<YOUR_EMAIL>");
         mailSender.send(message);
     }
 
@@ -100,7 +100,7 @@ public class EmailService {
             helper.setTo(studentEmail);
             helper.setSubject(subject);
             helper.setText(body, true);
-            helper.setFrom("technihongo.work@gmail.com");
+            helper.setFrom("<YOUR_EMAIL>");
             mailSender.send(message);
         } catch (MessagingException e) {
             System.err.println("Failed to send violation email to " + student.getUser().getEmail() + ": " + e.getMessage());
