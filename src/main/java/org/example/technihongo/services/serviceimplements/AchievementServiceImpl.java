@@ -95,8 +95,7 @@ public class AchievementServiceImpl implements AchievementService {
 
         StudentAchievement saved = studentAchievementRepository.save(studentAchievement);
 
-        Achievement achievement = achievementRepository.findById(achievementId).orElse(null);
-        if (achievement != null) {
+        achievementRepository.findById(achievementId).ifPresent(achievement -> {
             UserActivityLog activityLog = UserActivityLog.builder()
                     .user(User.builder().userId(studentId).build())
                     .activityType(ActivityType.ACHIEVEMENT_UNLOCKED)
@@ -107,10 +106,11 @@ public class AchievementServiceImpl implements AchievementService {
                     .build();
             userActivityLogRepository.save(activityLog);
 
-            StudentLearningStatistics statistics = learningStatisticsRepository.findByStudentStudentId(studentId).get();
-            statistics.setTotalAchievementsUnlocked(statistics.getTotalAchievementsUnlocked() + 1);
-            learningStatisticsRepository.save(statistics);
-        }
+            learningStatisticsRepository.findByStudentStudentId(studentId).ifPresent(statistics -> {
+                statistics.setTotalAchievementsUnlocked(statistics.getTotalAchievementsUnlocked() + 1);
+                learningStatisticsRepository.save(statistics);
+            });
+        });
 
         return new StudentAchievementDTO(
                 saved.getStudentAchievementId(),
