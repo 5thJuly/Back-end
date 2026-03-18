@@ -11,9 +11,7 @@ import org.example.technihongo.repositories.LearningPathRepository;
 import org.example.technihongo.repositories.PathCourseRepository;
 import org.example.technihongo.repositories.UserRepository;
 import org.example.technihongo.services.interfaces.LearningPathService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,16 +19,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Component
+@Transactional
 public class LearningPathServiceImpl implements LearningPathService {
-    @Autowired
-    private LearningPathRepository learningPathRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DomainRepository domainRepository;
-    @Autowired
-    private PathCourseRepository pathCourseRepository;
+    private final LearningPathRepository learningPathRepository;
+    private final UserRepository userRepository;
+    private final DomainRepository domainRepository;
+    private final PathCourseRepository pathCourseRepository;
 
     @Override
     public List<LearningPath> getAllLearningPaths(String keyword, Integer domainId) {
@@ -96,15 +90,13 @@ public class LearningPathServiceImpl implements LearningPathService {
             throw new RuntimeException("Cannot assign sub domains!");
         }
 
-        LearningPath learningPath = learningPathRepository.save(LearningPath.builder()
+        return learningPathRepository.save(LearningPath.builder()
                 .title(createLearningPathDTO.getTitle())
                 .description(createLearningPathDTO.getDescription())
                 .domain(domainRepository.findByDomainId(createLearningPathDTO.getDomainId()))
                 .creator(userRepository.findByUserId(creatorId))
                 .totalCourses(0)
                 .build());
-
-        return learningPath;
     }
 
     @Override

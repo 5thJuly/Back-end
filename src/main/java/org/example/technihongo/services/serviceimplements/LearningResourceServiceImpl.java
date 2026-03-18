@@ -6,7 +6,6 @@ import org.example.technihongo.dto.LearningResourceStatusDTO;
 import org.example.technihongo.entities.*;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.LearningResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class LearningResourceServiceImpl implements LearningResourceService {
-    @Autowired
-    private LearningResourceRepository learningResourceRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private StudentSubscriptionRepository studentSubscriptionRepository;
-    @Autowired
-    private StudentFavoriteRepository studentFavoriteRepository;
-    @Autowired
-    private StudentResourceProgressRepository studentResourceProgressRepository;
-    @Autowired
-    private StudentFlashcardSetRepository studentFlashcardSetRepository;
-    @Autowired
-    private LessonResourceRepository lessonResourceRepository;
+    private final LearningResourceRepository learningResourceRepository;
+    private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
+    private final StudentSubscriptionRepository studentSubscriptionRepository;
+    private final StudentResourceProgressRepository studentResourceProgressRepository;
+    private final StudentFlashcardSetRepository studentFlashcardSetRepository;
+    private final LessonResourceRepository lessonResourceRepository;
 
     @Override
     public List<LearningResource> getAllLearningResources() {
@@ -80,7 +70,7 @@ public class LearningResourceServiceImpl implements LearningResourceService {
             throw new RuntimeException("User ID not found!");
         }
 
-        LearningResource resource = learningResourceRepository.save(LearningResource.builder()
+        return learningResourceRepository.save(LearningResource.builder()
                 .title(learningResourceDTO.getTitle())
                 .description(learningResourceDTO.getDescription())
                 .creator(user)
@@ -90,8 +80,6 @@ public class LearningResourceServiceImpl implements LearningResourceService {
                 .pdfFilename(learningResourceDTO.getPdfFilename())
                 .isPremium(learningResourceDTO.getIsPremium())
                 .build());
-
-        return resource;
     }
 
     @Override

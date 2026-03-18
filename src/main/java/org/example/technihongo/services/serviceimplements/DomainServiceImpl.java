@@ -1,5 +1,6 @@
 package org.example.technihongo.services.serviceimplements;
 
+import lombok.RequiredArgsConstructor;
 import org.example.technihongo.dto.DomainRequestDTO;
 import org.example.technihongo.dto.DomainResponseDTO;
 import org.example.technihongo.dto.PageResponseDTO;
@@ -7,7 +8,6 @@ import org.example.technihongo.entities.Domain;
 import org.example.technihongo.exception.ResourceNotFoundException;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.DomainService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,16 +20,14 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class DomainServiceImpl implements DomainService {
 
-    @Autowired
-    private DomainRepository domainRepository;
+    private final DomainRepository domainRepository;
 
-    @Autowired
-    private LearningPathRepository learningPathRepository;
+    private final LearningPathRepository learningPathRepository;
 
-    @Autowired
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
 
     @Override

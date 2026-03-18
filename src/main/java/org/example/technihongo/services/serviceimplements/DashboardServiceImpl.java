@@ -28,18 +28,13 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
-    @Autowired
-    private PaymentTransactionRepository paymentTransactionRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private StudentSubscriptionRepository subscriptionRepository;
-    @Autowired
-    private StudentDailyLearningLogRepository studentDailyLearningLogRepository;
-    @Autowired
-    private StudentQuizAttemptRepository studentQuizAttemptRepository;
+
+    private final PaymentTransactionRepository paymentTransactionRepository;
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
+    private final StudentSubscriptionRepository subscriptionRepository;
+    private final StudentDailyLearningLogRepository studentDailyLearningLogRepository;
+    private final StudentQuizAttemptRepository studentQuizAttemptRepository;
 
     @Override
     @Transactional(readOnly = true)
