@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.technihongo.dto.*;
 import org.example.technihongo.entities.Course;
 import org.example.technihongo.entities.Domain;
-import org.example.technihongo.entities.StudyPlan;
-import org.example.technihongo.entities.User;
 import org.example.technihongo.enums.StudyPlanStatus;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.CourseService;

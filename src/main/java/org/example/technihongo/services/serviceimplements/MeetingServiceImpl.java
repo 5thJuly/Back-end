@@ -6,7 +6,6 @@ import org.example.technihongo.dto.PageResponseDTO;
 import org.example.technihongo.entities.Meeting;
 import org.example.technihongo.entities.User;
 import org.example.technihongo.repositories.MeetingRepository;
-import org.example.technihongo.repositories.MeetingScriptRepository;
 import org.example.technihongo.repositories.UserRepository;
 import org.example.technihongo.services.interfaces.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
