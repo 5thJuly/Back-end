@@ -2,8 +2,6 @@ package org.example.technihongo.api;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.technihongo.core.security.JwtUtil;
-import org.example.technihongo.dto.CoursePublicDTO;
-import org.example.technihongo.entities.Course;
 import org.example.technihongo.entities.StudentDailyLearningLog;
 import org.example.technihongo.enums.ActivityType;
 import org.example.technihongo.enums.ContentType;
@@ -11,14 +9,11 @@ import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.StudentDailyLearningLogService;
 import org.example.technihongo.services.interfaces.StudentService;
 import org.example.technihongo.services.interfaces.UserActivityLogService;
-import org.example.technihongo.services.serviceimplements.UserActivityLogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/learning-log")
