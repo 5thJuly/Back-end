@@ -9,7 +9,6 @@ import org.example.technihongo.enums.ActivityType;
 import org.example.technihongo.enums.ContentType;
 import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,16 +21,16 @@ import java.util.Optional;
 @RequestMapping("/api/course")
 @RequiredArgsConstructor
 public class CourseController {
-    @Autowired
-    private CourseService courseService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private StudentCourseProgressService studentCourseProgressService;
-    @Autowired
-    private UserActivityLogService userActivityLogService;
+    
+    private final CourseService courseService;
+    
+    private final JwtUtil jwtUtil;
+    
+    private final StudentService studentService;
+    
+    private final StudentCourseProgressService studentCourseProgressService;
+    
+    private final UserActivityLogService userActivityLogService;
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllCourses(
