@@ -26,17 +26,13 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
+
     
     private final PaymentTransactionRepository paymentTransactionRepository;
-    
     private final StudentRepository studentRepository;
-    
     private final CourseRepository courseRepository;
-    
     private final StudentSubscriptionRepository subscriptionRepository;
-    
     private final StudentDailyLearningLogRepository studentDailyLearningLogRepository;
-   
     private final StudentQuizAttemptRepository studentQuizAttemptRepository;
 
     @Override

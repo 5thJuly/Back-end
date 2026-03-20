@@ -6,6 +6,9 @@ import org.example.technihongo.dto.LearningResourceStatusDTO;
 import org.example.technihongo.entities.*;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.LearningResourceService;
+
+import org.springframework.stereotype.Component;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,7 +71,7 @@ public class LearningResourceServiceImpl implements LearningResourceService {
             throw new RuntimeException("User ID not found!");
         }
 
-        LearningResource resource = learningResourceRepository.save(LearningResource.builder()
+        return learningResourceRepository.save(LearningResource.builder()
                 .title(learningResourceDTO.getTitle())
                 .description(learningResourceDTO.getDescription())
                 .creator(user)
@@ -78,8 +81,6 @@ public class LearningResourceServiceImpl implements LearningResourceService {
                 .pdfFilename(learningResourceDTO.getPdfFilename())
                 .isPremium(learningResourceDTO.getIsPremium())
                 .build());
-
-        return resource;
     }
 
     @Override

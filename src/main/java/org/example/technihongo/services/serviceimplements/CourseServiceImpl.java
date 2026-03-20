@@ -7,7 +7,6 @@ import org.example.technihongo.entities.Domain;
 import org.example.technihongo.enums.StudyPlanStatus;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,20 +23,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Component
 public class CourseServiceImpl implements CourseService {
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DomainRepository domainRepository;
-    @Autowired
-    private DifficultyLevelRepository difficultyLevelRepository;
-    @Autowired
-    private StudentStudyPlanRepository studentStudyPlanRepository;
-    @Autowired
-    private StudyPlanRepository studyPlanRepository;
-    @Autowired
-    private PathCourseRepository pathCourseRepository;
+    private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+    private final DomainRepository domainRepository;
+    private final DifficultyLevelRepository difficultyLevelRepository;
+    private final StudentStudyPlanRepository studentStudyPlanRepository;
+    private final StudyPlanRepository studyPlanRepository;
+    private final PathCourseRepository pathCourseRepository;
 
     @Override
     public List<Course> courseList() {
@@ -87,7 +79,7 @@ public class CourseServiceImpl implements CourseService {
             throw new RuntimeException("Không tìm thấy ID Độ khó!");
         }
 
-        Course course = courseRepository.save(Course.builder()
+        return courseRepository.save(Course.builder()
                 .title(createCourseDTO.getTitle())
                 .description(createCourseDTO.getDescription())
                 .creator(userRepository.findByUserId(creatorId))
@@ -97,8 +89,6 @@ public class CourseServiceImpl implements CourseService {
                 .estimatedDuration(createCourseDTO.getEstimatedDuration())
                 .isPremium(createCourseDTO.isPremium())
                 .build());
-
-        return course;
     }
 
     @Override
@@ -144,8 +134,6 @@ public class CourseServiceImpl implements CourseService {
         course.setDifficultyLevel(difficultyLevelRepository.findByLevelId(updateCourseDTO.getDifficultyLevelId()));
         course.setThumbnailUrl(updateCourseDTO.getThumbnailUrl());
         course.setEstimatedDuration(updateCourseDTO.getEstimatedDuration());
-//        course.setPublicStatus(updateCourseDTO.getIsPublic());
-//        course.setPremium(updateCourseDTO.getIsPremium());
         course.setUpdateAt(LocalDateTime.now());
 
         courseRepository.save(course);
@@ -191,61 +179,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public PageResponseDTO<Course> courseListPaginated(String keyword, Integer domainId, Integer difficultyLevelId, int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Course> courses;
-
-        if (keyword != null && domainId == null && difficultyLevelId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCase(keyword, pageable);
-        } else if (domainId != null && keyword == null && difficultyLevelId == null) {
-            courses = courseRepository.findByDomain_DomainId(domainId, pageable);
-        } else if (difficultyLevelId != null && keyword == null && domainId == null) {
-            courses = courseRepository.findByDifficultyLevel_LevelId(difficultyLevelId, pageable);
-        } else if (keyword != null && domainId != null && difficultyLevelId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndDomain_DomainId(keyword, domainId, pageable);
-        } else if (keyword != null && domainId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndDifficultyLevel_LevelId(keyword, difficultyLevelId, pageable);
-        } else if (domainId != null && keyword == null) {
-            courses = courseRepository.findByDomain_DomainIdAndDifficultyLevel_LevelId(domainId, difficultyLevelId, pageable);
-        } else if (keyword != null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndDomain_DomainIdAndDifficultyLevel_LevelId(keyword, domainId, difficultyLevelId, pageable);
-        } else {
-            courses = courseRepository.findAll(pageable);
-        }
-
+        Pageable pageable = createPageable(pageNo, pageSize, sortBy, sortDir);
+        Page<Course> courses = buildCourseFilter(keyword, domainId, difficultyLevelId, pageable, false, null);
         return getPageResponseDTO(courses);
     }
 
     @Override
     public PageResponseDTO<Course> getPublicCoursesPaginated(String keyword, Integer domainId, Integer difficultyLevelId, int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Course> courses;
-
-        if (keyword != null && domainId == null && difficultyLevelId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndPublicStatus(keyword, true, pageable);
-        } else if (domainId != null && keyword == null && difficultyLevelId == null) {
-            courses = courseRepository.findByDomain_DomainIdAndPublicStatus(domainId, true, pageable);
-        } else if (difficultyLevelId != null && keyword == null && domainId == null) {
-            courses = courseRepository.findByPublicStatusAndDifficultyLevel_LevelId(true, difficultyLevelId, pageable);
-        } else if (keyword != null && domainId != null && difficultyLevelId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndPublicStatusAndDomain_DomainId(keyword, true, domainId, pageable);
-        } else if (keyword != null && domainId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndPublicStatusAndDifficultyLevel_LevelId(keyword, true, difficultyLevelId, pageable);
-        } else if (domainId != null && keyword == null) {
-            courses = courseRepository.findByDomain_DomainIdAndPublicStatusAndDifficultyLevel_LevelId(domainId, true, difficultyLevelId, pageable);
-        } else if (keyword != null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndPublicStatusAndDomain_DomainIdAndDifficultyLevel_LevelId(keyword, true, domainId, difficultyLevelId, pageable);
-        } else {
-            courses = courseRepository.findCoursesByPublicStatus(true, pageable);
-        }
-
+        Pageable pageable = createPageable(pageNo, pageSize, sortBy, sortDir);
+        Page<Course> courses = buildCourseFilter(keyword, domainId, difficultyLevelId, pageable, true, null);
         return getPageResponseDTO(courses);
     }
 
@@ -254,31 +196,8 @@ public class CourseServiceImpl implements CourseService {
         userRepository.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("User ID not found."));
 
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Course> courses;
-
-        if (keyword != null && domainId == null && difficultyLevelId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndCreator_UserId(keyword, creatorId, pageable);
-        } else if (domainId != null && keyword == null && difficultyLevelId == null) {
-            courses = courseRepository.findByDomain_DomainIdAndCreator_UserId(domainId, creatorId, pageable);
-        } else if (difficultyLevelId != null && keyword == null && domainId == null) {
-            courses = courseRepository.findByCreator_UserIdAndDifficultyLevel_LevelId(creatorId, difficultyLevelId, pageable);
-        } else if (keyword != null && domainId != null && difficultyLevelId == null) {
-            courses = courseRepository.findByDomain_DomainIdAndCreator_UserIdAndTitleContainingIgnoreCase(domainId, creatorId, keyword, pageable);
-        } else if (keyword != null && domainId == null) {
-            courses = courseRepository.findByTitleContainingIgnoreCaseAndCreator_UserIdAndDifficultyLevel_LevelId(keyword, creatorId, difficultyLevelId, pageable);
-        } else if (domainId != null && keyword == null) {
-            courses = courseRepository.findByDomain_DomainIdAndCreator_UserIdAndDifficultyLevel_LevelId(domainId, creatorId, difficultyLevelId, pageable);
-        } else if (keyword != null) {
-            courses = courseRepository.findByDomain_DomainIdAndCreator_UserIdAndTitleContainingIgnoreCaseAndDifficultyLevel_LevelId(domainId, creatorId, keyword, difficultyLevelId, pageable);
-        } else {
-            courses = courseRepository.findByCreator_UserId(creatorId, pageable);
-        }
-
+        Pageable pageable = createPageable(pageNo, pageSize, sortBy, sortDir);
+        Page<Course> courses = buildCourseFilter(keyword, domainId, difficultyLevelId, pageable, false, creatorId);
         return getPageResponseDTO(courses);
     }
 
@@ -327,5 +246,81 @@ public class CourseServiceImpl implements CourseService {
                 .totalPages(page.getTotalPages())
                 .last(page.isLast())
                 .build();
+    }
+
+    private Pageable createPageable(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        return PageRequest.of(pageNo, pageSize, sort);
+    }
+
+    private Page<Course> buildCourseFilter(String keyword, Integer domainId, Integer difficultyLevelId,
+                                          Pageable pageable, boolean isPublic, Integer creatorId) {
+        boolean hasKeyword = keyword != null;
+        boolean hasDomain = domainId != null;
+        boolean hasDifficulty = difficultyLevelId != null;
+        boolean hasCreator = creatorId != null;
+
+        // Nếu có creator, filter theo creator
+        if (hasCreator) {
+            if (hasKeyword && hasDomain && hasDifficulty) {
+                return courseRepository.findByDomain_DomainIdAndCreator_UserIdAndTitleContainingIgnoreCaseAndDifficultyLevel_LevelId(domainId, creatorId, keyword, difficultyLevelId, pageable);
+            } else if (hasKeyword && hasDomain) {
+                return courseRepository.findByDomain_DomainIdAndCreator_UserIdAndTitleContainingIgnoreCase(domainId, creatorId, keyword, pageable);
+            } else if (hasKeyword && hasDifficulty) {
+                return courseRepository.findByTitleContainingIgnoreCaseAndCreator_UserIdAndDifficultyLevel_LevelId(keyword, creatorId, difficultyLevelId, pageable);
+            } else if (hasDomain && hasDifficulty) {
+                return courseRepository.findByDomain_DomainIdAndCreator_UserIdAndDifficultyLevel_LevelId(domainId, creatorId, difficultyLevelId, pageable);
+            } else if (hasKeyword) {
+                return courseRepository.findByTitleContainingIgnoreCaseAndCreator_UserId(keyword, creatorId, pageable);
+            } else if (hasDomain) {
+                return courseRepository.findByDomain_DomainIdAndCreator_UserId(domainId, creatorId, pageable);
+            } else if (hasDifficulty) {
+                return courseRepository.findByCreator_UserIdAndDifficultyLevel_LevelId(creatorId, difficultyLevelId, pageable);
+            } else {
+                return courseRepository.findByCreator_UserId(creatorId, pageable);
+            }
+        }
+
+        // Filter không có creator - public courses
+        if (isPublic) {
+            if (hasKeyword && hasDomain && hasDifficulty) {
+                return courseRepository.findByTitleContainingIgnoreCaseAndPublicStatusAndDomain_DomainIdAndDifficultyLevel_LevelId(keyword, true, domainId, difficultyLevelId, pageable);
+            } else if (hasKeyword && hasDomain) {
+                return courseRepository.findByTitleContainingIgnoreCaseAndPublicStatusAndDomain_DomainId(keyword, true, domainId, pageable);
+            } else if (hasKeyword && hasDifficulty) {
+                return courseRepository.findByTitleContainingIgnoreCaseAndPublicStatusAndDifficultyLevel_LevelId(keyword, true, difficultyLevelId, pageable);
+            } else if (hasDomain && hasDifficulty) {
+                return courseRepository.findByDomain_DomainIdAndPublicStatusAndDifficultyLevel_LevelId(domainId, true, difficultyLevelId, pageable);
+            } else if (hasKeyword) {
+                return courseRepository.findByTitleContainingIgnoreCaseAndPublicStatus(keyword, true, pageable);
+            } else if (hasDomain) {
+                return courseRepository.findByDomain_DomainIdAndPublicStatus(domainId, true, pageable);
+            } else if (hasDifficulty) {
+                return courseRepository.findByPublicStatusAndDifficultyLevel_LevelId(true, difficultyLevelId, pageable);
+            } else {
+                return courseRepository.findCoursesByPublicStatus(true, pageable);
+            }
+        }
+
+        // Filter không có creator - all courses
+        if (hasKeyword && hasDomain && hasDifficulty) {
+            return courseRepository.findByTitleContainingIgnoreCaseAndDomain_DomainIdAndDifficultyLevel_LevelId(keyword, domainId, difficultyLevelId, pageable);
+        } else if (hasKeyword && hasDomain) {
+            return courseRepository.findByTitleContainingIgnoreCaseAndDomain_DomainId(keyword, domainId, pageable);
+        } else if (hasKeyword && hasDifficulty) {
+            return courseRepository.findByTitleContainingIgnoreCaseAndDifficultyLevel_LevelId(keyword, difficultyLevelId, pageable);
+        } else if (hasDomain && hasDifficulty) {
+            return courseRepository.findByDomain_DomainIdAndDifficultyLevel_LevelId(domainId, difficultyLevelId, pageable);
+        } else if (hasKeyword) {
+            return courseRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+        } else if (hasDomain) {
+            return courseRepository.findByDomain_DomainId(domainId, pageable);
+        } else if (hasDifficulty) {
+            return courseRepository.findByDifficultyLevel_LevelId(difficultyLevelId, pageable);
+        } else {
+            return courseRepository.findAll(pageable);
+        }
     }
 }
