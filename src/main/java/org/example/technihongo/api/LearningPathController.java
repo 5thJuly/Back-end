@@ -4,14 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.technihongo.core.security.JwtUtil;
 import org.example.technihongo.dto.*;
-import org.example.technihongo.entities.Course;
 import org.example.technihongo.entities.LearningPath;
 import org.example.technihongo.enums.ActivityType;
 import org.example.technihongo.enums.ContentType;
 import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.LearningPathService;
 import org.example.technihongo.services.interfaces.UserActivityLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,12 +21,12 @@ import java.util.List;
 @RequestMapping("/api/learning-path")
 @RequiredArgsConstructor
 public class LearningPathController {
-    @Autowired
-    private LearningPathService learningPathService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private UserActivityLogService userActivityLogService;
+    
+    private final LearningPathService learningPathService;
+    
+    private final JwtUtil jwtUtil;
+    
+    private final UserActivityLogService userActivityLogService;
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllLearningPaths(

@@ -4,13 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.technihongo.core.security.JwtUtil;
 import org.example.technihongo.dto.*;
-import org.example.technihongo.entities.Course;
 import org.example.technihongo.entities.Lesson;
 import org.example.technihongo.enums.ActivityType;
 import org.example.technihongo.enums.ContentType;
 import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,18 +21,18 @@ import java.util.Optional;
 @RequestMapping("/api/lesson")
 @RequiredArgsConstructor
 public class LessonController {
-    @Autowired
-    private LessonService lessonService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private StudentCourseProgressService studentCourseProgressService;
-    @Autowired
-    private StudentLessonProgressService studentLessonProgressService;
-    @Autowired
-    private UserActivityLogService userActivityLogService;
+    
+    private final LessonService lessonService;
+    
+    private final JwtUtil jwtUtil;
+    
+    private final StudentService studentService;
+    
+    private final StudentCourseProgressService studentCourseProgressService;
+    
+    private final StudentLessonProgressService studentLessonProgressService;
+    
+    private final UserActivityLogService userActivityLogService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getLessonById(

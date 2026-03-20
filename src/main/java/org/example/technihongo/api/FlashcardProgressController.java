@@ -3,27 +3,27 @@ package org.example.technihongo.api;
 
 import org.example.technihongo.core.security.JwtUtil;
 import org.example.technihongo.dto.FlashcardProgressDTO;
-import org.example.technihongo.dto.FlashcardProgressRequestDTO;
 import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.FlashcardProgressService;
 import org.example.technihongo.services.interfaces.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/flashcard-progress")
+@RequiredArgsConstructor
 public class FlashcardProgressController {
-    @Autowired
-    private FlashcardProgressService flashcardProgressService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private StudentService studentService;
+    
+    private final FlashcardProgressService flashcardProgressService;
+    
+    private final JwtUtil jwtUtil;
+    
+    private final StudentService studentService;
 
     @GetMapping("/starred")
     @PreAuthorize("hasRole('ROLE_Student')")
