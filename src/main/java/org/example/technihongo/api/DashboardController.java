@@ -6,7 +6,6 @@ import org.example.technihongo.dto.AdminOverviewDTO;
 import org.example.technihongo.dto.LearningStatsDTO;
 import org.example.technihongo.dto.QuizStatsDTO;
 import org.example.technihongo.dto.StudentSpendingDTO;
-import org.example.technihongo.entities.Achievement;
 import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.DashboardService;
 import org.example.technihongo.services.interfaces.StudentService;

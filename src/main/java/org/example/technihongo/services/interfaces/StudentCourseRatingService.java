@@ -3,8 +3,6 @@ package org.example.technihongo.services.interfaces;
 import org.example.technihongo.dto.PageResponseDTO;
 import org.example.technihongo.dto.StudentCourseRatingDTO;
 import org.example.technihongo.dto.StudentCourseRatingRequest;
-import org.springframework.data.domain.Page;
-
 import java.math.BigDecimal;
 import java.util.List;
 

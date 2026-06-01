@@ -47,24 +47,10 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
         SubscriptionPlan existingPlan = subscriptionPlanRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Subscription plan not found with id: " + id));
 
-        if (!dto.isActive() && checkIfPlanIsUsed(existingPlan)) {
-            throw new IllegalStateException("Không thể vô hiệu hóa gói đăng ký vì nó đang được sử dụng.");
-        }
-
-        if (dto.getPrice() != null) {
-            existingPlan.setPrice(dto.getPrice());
-        }
-
-        if (dto.getBenefits() != null) {
-            existingPlan.setBenefits(dto.getBenefits());
-        }
-
-        if (dto.getDurationDays() != null) {
-            existingPlan.setDurationDays(dto.getDurationDays());
-        }
-
+        Optional.ofNullable(dto.getPrice()).ifPresent(existingPlan::setPrice);
+        Optional.ofNullable(dto.getBenefits()).ifPresent(existingPlan::setBenefits);
+        Optional.ofNullable(dto.getDurationDays()).ifPresent(existingPlan::setDurationDays);
         existingPlan.setActive(dto.isActive());
-
         return subscriptionPlanRepository.save(existingPlan);
     }
 

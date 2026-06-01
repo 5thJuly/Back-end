@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Component
 public class LearningResourceServiceImpl implements LearningResourceService {
     private final LearningResourceRepository learningResourceRepository;
     private final UserRepository userRepository;

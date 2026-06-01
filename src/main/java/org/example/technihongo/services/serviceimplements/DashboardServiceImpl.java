@@ -6,10 +6,8 @@ import org.example.technihongo.dto.LearningStatsDTO;
 import org.example.technihongo.dto.QuizStatsDTO;
 import org.example.technihongo.dto.StudentSpendingDTO;
 import org.example.technihongo.entities.StudentDailyLearningLog;
-import org.example.technihongo.entities.StudentQuizAttempt;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.DashboardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +26,6 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
-
     private final PaymentTransactionRepository paymentTransactionRepository;
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;

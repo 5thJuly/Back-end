@@ -1,6 +1,8 @@
 package org.example.technihongo.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
 import org.example.technihongo.core.security.JwtUtil;
 import org.example.technihongo.dto.*;
 import org.example.technihongo.entities.Quiz;
@@ -8,9 +10,7 @@ import org.example.technihongo.enums.ActivityType;
 import org.example.technihongo.enums.ContentType;
 import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.QuizService;
-import org.example.technihongo.services.interfaces.StudentService;
 import org.example.technihongo.services.interfaces.UserActivityLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,15 +22,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/quiz")
 @Validated
+@RequiredArgsConstructor
 public class QuizController {
-    @Autowired
-    private QuizService quizService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private UserActivityLogService userActivityLogService;
+    
+    private final QuizService quizService;
+    private final JwtUtil jwtUtil;
+    private final UserActivityLogService userActivityLogService;
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_Content Manager')")

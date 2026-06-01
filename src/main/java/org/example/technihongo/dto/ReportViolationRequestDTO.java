@@ -2,9 +2,6 @@ package org.example.technihongo.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import org.example.technihongo.enums.ViolationStatus;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder

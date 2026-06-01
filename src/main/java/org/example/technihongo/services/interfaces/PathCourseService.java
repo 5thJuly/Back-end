@@ -5,7 +5,6 @@ import org.example.technihongo.dto.PageResponseDTO;
 import org.example.technihongo.dto.UpdatePathCourseOrderDTO;
 import org.example.technihongo.entities.PathCourse;
 
-import java.util.List;
 
 public interface PathCourseService {
     PageResponseDTO<PathCourse> getPathCoursesByLearningPathId(Integer pathId, int pageNo, int pageSize, String sortBy, String sortDir);
