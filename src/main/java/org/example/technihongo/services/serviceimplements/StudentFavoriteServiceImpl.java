@@ -2,14 +2,13 @@ package org.example.technihongo.services.serviceimplements;
 
 import lombok.RequiredArgsConstructor;
 import org.example.technihongo.dto.PageResponseDTO;
-import org.example.technihongo.entities.LearningResource;
+
 import org.example.technihongo.entities.LessonResource;
 import org.example.technihongo.entities.Student;
 import org.example.technihongo.entities.StudentFavorite;
 import org.example.technihongo.exception.ResourceNotFoundException;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.StudentFavoriteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.example.technihongo.services.interfaces.AchievementService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,18 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Component
 public class StudentFavoriteServiceImpl implements StudentFavoriteService {
-    @Autowired
-    private StudentFavoriteRepository studentFavoriteRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private LearningResourceRepository learningResourceRepository;
-    @Autowired
-    private StudentSubscriptionRepository studentSubscriptionRepository;
-    @Autowired
-    private AchievementService achievementService;
-    @Autowired
-    private LessonResourceRepository lessonResourceRepository;
+    private final StudentFavoriteRepository studentFavoriteRepository;
+    private final StudentRepository studentRepository;
+    private final LearningResourceRepository learningResourceRepository;
+    private final StudentSubscriptionRepository studentSubscriptionRepository;
+    private final AchievementService achievementService;
+    private final LessonResourceRepository lessonResourceRepository;
 
 
     @Override

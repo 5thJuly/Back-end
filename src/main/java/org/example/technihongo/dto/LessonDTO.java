@@ -1,6 +1,4 @@
 package org.example.technihongo.dto;
-
-import jakarta.persistence.Column;
 import lombok.*;
 import org.example.technihongo.entities.StudyPlan;
 

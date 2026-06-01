@@ -1,9 +1,7 @@
 package org.example.technihongo.repositories;
 
-import lombok.NonNull;
 import org.example.technihongo.entities.User;
-import org.example.technihongo.enums.ActivityType;
-import org.example.technihongo.enums.ContentType;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,9 +21,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findByUserId(Integer userId);
     List<User> findByRole_RoleId(Integer roleId);
 
-    @NonNull
-    Page<User> findAll(@NonNull Pageable pageable);
-    @NonNull
     Page<User> findByRole_RoleId(Integer roleId, Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE u.role.roleId = 3 AND (u.userName LIKE %:keyword% OR u.email LIKE %:keyword%)")

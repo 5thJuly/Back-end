@@ -1,37 +1,28 @@
 package org.example.technihongo.services.serviceimplements;
 
-import org.example.technihongo.dto.FolderItemDTO;
 import org.example.technihongo.dto.StudentFolderDTO;
 import org.example.technihongo.entities.Student;
 import org.example.technihongo.entities.StudentFolder;
-import org.example.technihongo.repositories.FolderItemRepository;
 import org.example.technihongo.repositories.StudentFolderRepository;
 import org.example.technihongo.repositories.StudentRepository;
 import org.example.technihongo.services.interfaces.FolderItemService;
 import org.example.technihongo.services.interfaces.StudentFolderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class StudentFolderServiceImpl implements StudentFolderService {
 
-    @Autowired
-    private StudentFolderRepository studentFolderRepository;
+    private final StudentFolderRepository studentFolderRepository;
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
-    @Autowired
-    private FolderItemRepository folderItemRepository;
-
-    @Autowired
-    private FolderItemService folderItemService;
-
+    private final FolderItemService folderItemService;
     @Override
     public StudentFolderDTO createStudentFolder(Integer studentId,StudentFolderDTO folderDTO) {
 

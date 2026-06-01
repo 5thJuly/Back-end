@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @Table(name = "[StudentLessonProgress]")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class StudentLessonProgress {
 
     @Id
@@ -31,13 +31,16 @@ public class StudentLessonProgress {
     private Lesson lesson;
 
     @Column(name = "completion_percentage", precision = 5, scale = 2, nullable = false)
+    @Builder.Default
     private BigDecimal completionPercentage = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "completion_status", length = 30, nullable = false)
-    private CompletionStatus completionStatus;
+    @Builder.Default
+    private CompletionStatus completionStatus = CompletionStatus.NOT_STARTED;
 
     @Column(name = "completed_items", nullable = false)
+    @Builder.Default
     private Integer completedItems = 0;
 
     @Column(name = "last_studied")

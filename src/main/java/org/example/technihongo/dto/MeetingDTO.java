@@ -1,11 +1,9 @@
 package org.example.technihongo.dto;
 
-import lombok.Data;
-import org.example.technihongo.entities.User;
-
-import java.time.LocalDateTime;
-
-@Data
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 public class MeetingDTO {
     private String title;
     private String description;

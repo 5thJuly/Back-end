@@ -5,10 +5,8 @@ import org.example.technihongo.dto.UserActivityLogDTO;
 import org.example.technihongo.entities.*;
 import org.example.technihongo.enums.ActivityType;
 import org.example.technihongo.enums.ContentType;
-import org.example.technihongo.exception.ResourceNotFoundException;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.UserActivityLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,22 +23,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserActivityLogServiceImpl implements UserActivityLogService {
-    @Autowired
-    private UserActivityLogRepository userActivityLogRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private LessonRepository lessonRepository;
-    @Autowired
-    private LearningResourceRepository learningResourceRepository;
-    @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private SystemFlashcardSetRepository systemFlashcardSetRepository;
-    @Autowired
-    private StudentFlashcardSetRepository studentFlashcardSetRepository;
+    private final UserActivityLogRepository userActivityLogRepository;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final LessonRepository lessonRepository;
+    private final LearningResourceRepository learningResourceRepository;
+    private final QuizRepository quizRepository;
+    private final SystemFlashcardSetRepository systemFlashcardSetRepository;
+    private final StudentFlashcardSetRepository studentFlashcardSetRepository;
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
 

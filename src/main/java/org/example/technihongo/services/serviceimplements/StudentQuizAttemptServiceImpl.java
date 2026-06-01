@@ -11,7 +11,6 @@ import org.example.technihongo.services.interfaces.StudentQuizAttemptService;
 import org.example.technihongo.services.interfaces.UserActivityLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,31 +27,17 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class StudentQuizAttemptServiceImpl implements StudentQuizAttemptService {
-
-    @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private StudentQuizAttemptRepository studentQuizAttemptRepository;
-    @Autowired
-    private QuizAnswerResponseRepository quizAnswerResponseRepository;
-    @Autowired
-    private QuestionAnswerOptionRepository questionAnswerOptionRepository;
-    @Autowired
-    private StudentDailyLearningLogRepository dailyLogRepository;
-    @Autowired
-    private StudentLearningStatisticsRepository statisticsRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserActivityLogService userActivityLogService;
-    @Autowired
-    private QuizQuestionRepository quizQuestionRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-
+    private final QuizRepository quizRepository;
+    private final StudentQuizAttemptRepository studentQuizAttemptRepository;                     
+    private final QuizAnswerResponseRepository quizAnswerResponseRepository;
+    private final QuestionAnswerOptionRepository questionAnswerOptionRepository;
+    private final StudentDailyLearningLogRepository dailyLogRepository;
+    private final StudentLearningStatisticsRepository statisticsRepository;
+    private final UserRepository userRepository;
+    private final UserActivityLogService userActivityLogService;
+    private final QuizQuestionRepository quizQuestionRepository;
+    private final StudentRepository studentRepository;
     private static final Logger log = LoggerFactory.getLogger(PaymentTransactionServiceImpl.class);
-
-
     private static final int MAX_ATTEMPTS = 3;
     private static final long WAIT_TIME_MINUTES = 30;
     private static final long MAX_QUIZ_DURATION_MINUTES = 120;
@@ -422,21 +407,21 @@ public class StudentQuizAttemptServiceImpl implements StudentQuizAttemptService 
                 .build();
     }
 
-    private void validateAttempt(Integer studentId, List<StudentQuizAttempt> attempts, int attemptNumber) {
-        if (attemptNumber > MAX_ATTEMPTS) {
-            StudentQuizAttempt lastAttempt = attempts.stream()
-                    .max(Comparator.comparing(StudentQuizAttempt::getDateTaken))
-                    .orElseThrow(() -> new IllegalStateException("No previous attempts found."));
-            LocalDateTime lastAttemptTime = lastAttempt.getDateTaken();
-            LocalDateTime now = LocalDateTime.now();
-            long minutesSinceLastAttempt = lastAttemptTime.until(now, java.time.temporal.ChronoUnit.MINUTES);
+    // private void validateAttempt(Integer studentId, List<StudentQuizAttempt> attempts, int attemptNumber) {
+    //     if (attemptNumber > MAX_ATTEMPTS) {
+    //         StudentQuizAttempt lastAttempt = attempts.stream()
+    //                 .max(Comparator.comparing(StudentQuizAttempt::getDateTaken))
+    //                 .orElseThrow(() -> new IllegalStateException("No previous attempts found."));
+    //         LocalDateTime lastAttemptTime = lastAttempt.getDateTaken();
+    //         LocalDateTime now = LocalDateTime.now();
+    //         long minutesSinceLastAttempt = lastAttemptTime.until(now, java.time.temporal.ChronoUnit.MINUTES);
 
-            if (minutesSinceLastAttempt < WAIT_TIME_MINUTES) {
-                long minutesToWait = WAIT_TIME_MINUTES - minutesSinceLastAttempt;
-                throw new IllegalStateException("You have reached the maximum number of attempts (" + MAX_ATTEMPTS + "). Please wait " + minutesToWait + " minutes before retrying.");
-            }
-        }
-    }
+    //         if (minutesSinceLastAttempt < WAIT_TIME_MINUTES) {
+    //             long minutesToWait = WAIT_TIME_MINUTES - minutesSinceLastAttempt;
+    //             throw new IllegalStateException("You have reached the maximum number of attempts (" + MAX_ATTEMPTS + "). Please wait " + minutesToWait + " minutes before retrying.");
+    //         }
+    //     }
+    // }
 
     private boolean shouldResetAttemptCounter(List<StudentQuizAttempt> attempts) {
         if (attempts.isEmpty()) return true;

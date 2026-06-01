@@ -3,7 +3,6 @@ package org.example.technihongo.core.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests(authorize -> authorize
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/payment/callback", "/api/v1/payment/ipn-handler",
                                 "/api/*/login", "/*/*/register", "/*/*/logout", "/*/*/google-auth",
                                 "/*/*/getUser/*", "/*/user/*/username", "/*/user/searchStudentName",

@@ -10,29 +10,22 @@ import org.example.technihongo.entities.StudyPlan;
 import org.example.technihongo.enums.StudyPlanStatus;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.StudyPlanService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Component
 public class StudyPlanServiceImpl implements StudyPlanService {
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private StudyPlanRepository studyPlanRepository;
-    @Autowired
-    private StudentStudyPlanRepository studentStudyPlanRepository;
-    @Autowired
-    private LessonRepository lessonRepository;
-    @Autowired
-    private LessonResourceRepository lessonResourceRepository;
+    private final CourseRepository courseRepository;
+    private final StudyPlanRepository studyPlanRepository;
+    private final StudentStudyPlanRepository studentStudyPlanRepository;
+    private final LessonRepository lessonRepository;
+    private final LessonResourceRepository lessonResourceRepository;
 
     @Override
     public List<StudyPlan> getStudyPlanListByCourseId(Integer courseId) {

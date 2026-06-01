@@ -6,8 +6,6 @@ import org.example.technihongo.entities.*;
 import org.example.technihongo.enums.CompletionStatus;
 import org.example.technihongo.repositories.*;
 import org.example.technihongo.services.interfaces.LessonResourceService;
-import org.example.technihongo.services.interfaces.StudentFlashcardSetProgressService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,26 +19,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class LessonResourceServiceImpl implements LessonResourceService {
-    @Autowired
-    private LessonResourceRepository lessonResourceRepository;
-    @Autowired
-    private LessonRepository lessonRepository;
-    @Autowired
-    private LearningResourceRepository learningResourceRepository;
-    @Autowired
-    private SystemFlashcardSetRepository systemFlashcardSetRepository;
-    @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private StudyPlanRepository studyPlanRepository;
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private StudentQuizAttemptRepository studentQuizAttemptRepository;
-    @Autowired
-    private StudentResourceProgressRepository studentResourceProgressRepository;
-    @Autowired
-    private StudentFlashcardSetProgressRepository studentFlashcardSetProgressRepository;
+    private final LessonResourceRepository lessonResourceRepository;
+    private final LessonRepository lessonRepository;
+    private final LearningResourceRepository learningResourceRepository;
+    private final SystemFlashcardSetRepository systemFlashcardSetRepository;
+    private final QuizRepository quizRepository;
+    private final StudyPlanRepository studyPlanRepository;
+    private final StudentRepository studentRepository;
+    private final StudentQuizAttemptRepository studentQuizAttemptRepository;
+    private final StudentResourceProgressRepository studentResourceProgressRepository;
+    private final StudentFlashcardSetProgressRepository studentFlashcardSetProgressRepository;
 
     @Override
     public List<LessonResource> getLessonResourceListByLessonId(Integer lessonId) {
@@ -171,6 +159,9 @@ public class LessonResourceServiceImpl implements LessonResourceService {
         }
 
         Lesson lesson = lessonRepository.findByLessonId(createLessonResourceDTO.getLessonId());
+        if(lesson == null){
+            throw new RuntimeException("Không tìm thấy ID Lesson!");
+        }
         if(l != null && lessonResourceRepository.existsByLesson_LessonIdAndLearningResource_ResourceId(
                 lesson.getLessonId(), l)){
             throw new RuntimeException("LearningResource này đã tồn tại trong lesson!");
@@ -224,6 +215,9 @@ public class LessonResourceServiceImpl implements LessonResourceService {
                 .orElseThrow(() -> new RuntimeException("LessonResource ID not found"));
 
         LessonResource lessonResource = lessonResourceRepository.findByLessonResourceId(lessonResourceId);
+        if(lessonResource == null){
+            throw new RuntimeException("LessonResource không thể null!");
+        }
         lessonResource.setActive(updateLessonResourceDTO.getIsActive());
         lessonResourceRepository.save(lessonResource);
     }
@@ -287,16 +281,16 @@ public class LessonResourceServiceImpl implements LessonResourceService {
         if(keyword == null && type != null) {
             lessonResources = lessonResourceRepository.findByLesson_StudyPlan_StudyPlanIdAndType(studyPlanId, type, pageable);
         }
-        else if(keyword != null && !keyword.isEmpty() && type.isEmpty()) {
+        else if(keyword != null && !keyword.isEmpty() && (type == null || type.isEmpty())) {
             lessonResources = lessonResourceRepository.findByLesson_StudyPlan_StudyPlanIdAndLearningResource_TitleContainsIgnoreCaseOrSystemFlashCardSet_TitleContainsIgnoreCaseOrQuiz_TitleContainsIgnoreCase(studyPlanId, keyword, keyword, keyword, pageable);
         }
-        else if(keyword != null && type.equalsIgnoreCase("LearningResource")){
+        else if(keyword != null && type != null && type.equalsIgnoreCase("LearningResource")){
             lessonResources = lessonResourceRepository.findByLesson_StudyPlan_StudyPlanIdAndLearningResource_TitleContainsIgnoreCase(studyPlanId, keyword, pageable);
         }
-        else if(keyword != null && type.equalsIgnoreCase("FlashcardSet")){
+        else if(keyword != null && type != null && type.equalsIgnoreCase("FlashcardSet")){
             lessonResources = lessonResourceRepository.findByLesson_StudyPlan_StudyPlanIdAndSystemFlashCardSet_TitleContainsIgnoreCase(studyPlanId, keyword, pageable);
         }
-        else if(keyword != null && type.equalsIgnoreCase("Quiz")){
+        else if(keyword != null && type != null && type.equalsIgnoreCase("Quiz")){
             lessonResources = lessonResourceRepository.findByLesson_StudyPlan_StudyPlanIdAndQuiz_TitleContainsIgnoreCase(studyPlanId, keyword, pageable);
         }
         else{

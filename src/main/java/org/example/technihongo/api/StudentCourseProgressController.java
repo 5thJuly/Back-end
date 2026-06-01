@@ -1,18 +1,18 @@
 package org.example.technihongo.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
 import org.example.technihongo.core.security.JwtUtil;
 import org.example.technihongo.dto.CourseStatisticsDTO;
 import org.example.technihongo.dto.EnrollStudyPlanRequest;
 import org.example.technihongo.dto.StudentStudyPlanDTO;
 import org.example.technihongo.entities.StudentCourseProgress;
-import org.example.technihongo.entities.StudentStudyPlan;
 import org.example.technihongo.entities.StudyPlan;
 import org.example.technihongo.enums.ActivityType;
 import org.example.technihongo.enums.ContentType;
 import org.example.technihongo.response.ApiResponse;
 import org.example.technihongo.services.interfaces.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,20 +21,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/course-progress")
 public class StudentCourseProgressController {
-    @Autowired
-    private StudentCourseProgressService courseProgressService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private UserActivityLogService userActivityLogService;
-    @Autowired
-    private StudyPlanService studyPlanService;
-    @Autowired
-    private StudentStudyPlanService studentStudyPlanService;
+    private final StudentCourseProgressService courseProgressService;
+    private final JwtUtil jwtUtil;
+    private final StudentService studentService;
+    private final UserActivityLogService userActivityLogService;
+    private final StudyPlanService studyPlanService;
+    private final StudentStudyPlanService studentStudyPlanService;
 
     @GetMapping("/view/{studentId}")
     public ResponseEntity<ApiResponse> getStudentCourseProgress(

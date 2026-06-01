@@ -50,9 +50,11 @@ public class StudentFlashcardSet {
     private boolean isPublic;
 
     @Column(name = "is_violated")
+    @Builder.Default
     private boolean isViolated = false;
 
     @Column(name = "is_deleted")
+    @Builder.Default
     private boolean isDeleted = false;
 
     @CreationTimestamp
@@ -64,10 +66,12 @@ public class StudentFlashcardSet {
     private LocalDateTime updatedAt;
 
     @JsonIgnore
+    @Builder.Default
     @OneToMany(mappedBy = "studentFlashCardSet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Flashcard> flashcards = new HashSet<>();
 
     @JsonIgnore
+    @Builder.Default
     @OneToMany(mappedBy = "studentFlashcardSet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<StudentFlashcardSetProgress> progresses = new HashSet<>();
 }
