@@ -12,7 +12,6 @@ import org.example.technihongo.enums.TokenType;
 import org.example.technihongo.repositories.AuthTokenRepository;
 import org.example.technihongo.repositories.UserRepository;
 import org.example.technihongo.services.interfaces.AuthTokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -25,14 +24,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Component
 public class AuthTokenServiceImpl implements AuthTokenService {
-    @Autowired
-    private AuthTokenRepository authTokenRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JWTHelper jwtHelper;
-    @Autowired
-    private TokenBlacklist tokenBlacklist;
+    private final AuthTokenRepository authTokenRepository;
+    private final UserRepository userRepository;
+    private final JWTHelper jwtHelper;
+    private final TokenBlacklist tokenBlacklist;
 
     @Override
     public void saveLoginToken(CreateLoginTokenDTO createLoginTokenDTO) {
@@ -85,7 +80,8 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     public String createEmailVerifyToken(Integer userId) {
         String token = UUID.randomUUID().toString();
         AuthToken authToken = new AuthToken();
-        authToken.setUser(userRepository.findById(userId).get());
+        authToken.setUser(userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found")));
         authToken.setToken(token);
         authToken.setTokenType(TokenType.EMAIL_VERIFICATION);
         authToken.setExpiresAt(LocalDateTime.now().plusHours(24));

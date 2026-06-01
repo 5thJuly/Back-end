@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface StudentFavoriteRepository extends JpaRepository<StudentFavorite, Integer>{
-//    Boolean existsByLearningResource_ResourceId(Integer learningResourceId);
     boolean existsByStudent_StudentIdAndLessonResource_LessonResourceId(Integer studentId, Integer lessonResourceId);
     @Query("SELECT sf FROM StudentFavorite sf WHERE sf.student.studentId = :studentId " +
             "AND sf.lessonResource.learningResource.isPublic = :isPublic")

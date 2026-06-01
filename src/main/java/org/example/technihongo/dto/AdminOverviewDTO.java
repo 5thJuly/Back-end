@@ -1,10 +1,13 @@
 package org.example.technihongo.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class AdminOverviewDTO {
     private Long totalStudents;
     private Long totalActiveCourses;
@@ -13,7 +16,8 @@ public class AdminOverviewDTO {
     private List<WeeklyRevenueDTO> monthlyRevenue;
     private List<MonthlyRevenueDTO> yearlyRevenue;
 
-    @Data
+    @Getter
+    @Setter
     public static class DailyRevenueDTO {
         private String date;
         private Double revenue;
@@ -24,7 +28,8 @@ public class AdminOverviewDTO {
         }
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class WeeklyRevenueDTO {
         private String week;
         private Double revenue;
@@ -35,7 +40,8 @@ public class AdminOverviewDTO {
         }
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class MonthlyRevenueDTO {
         private String month;
         private Double revenue;

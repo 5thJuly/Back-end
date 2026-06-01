@@ -1,5 +1,6 @@
 package org.example.technihongo.services.serviceimplements;
 
+import lombok.RequiredArgsConstructor;
 import org.example.technihongo.dto.FolderItemDTO;
 import org.example.technihongo.dto.RemoveItemDTO;
 import org.example.technihongo.entities.FolderItem;
@@ -9,7 +10,6 @@ import org.example.technihongo.repositories.FolderItemRepository;
 import org.example.technihongo.repositories.StudentFlashcardSetRepository;
 import org.example.technihongo.repositories.StudentFolderRepository;
 import org.example.technihongo.services.interfaces.FolderItemService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +20,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class FolderItemServiceImpl implements FolderItemService {
-
-    @Autowired
-    private FolderItemRepository folderItemRepository;
-
-    @Autowired
-    private StudentFolderRepository studentFolderRepository;
-
-    @Autowired
-    private StudentFlashcardSetRepository studentFlashcardSetRepository;
+    private final FolderItemRepository folderItemRepository;
+    private final StudentFolderRepository studentFolderRepository;
+    private final StudentFlashcardSetRepository studentFlashcardSetRepository;
 
     @Override
     public FolderItemDTO addFolderItem(Integer studentId, FolderItemDTO folderItemDTO) {
@@ -75,8 +70,8 @@ public class FolderItemServiceImpl implements FolderItemService {
             try {
                 FolderItemDTO addItem = addFolderItem(studentId, dto);
                 results.add(addItem);
-            }catch (Exception e) {
-                continue;
+            } catch (Exception e) {
+                System.err.println("Failed to add folder item: " + e.getMessage());
             }
         }
         return results;
@@ -102,7 +97,7 @@ public class FolderItemServiceImpl implements FolderItemService {
             try {
                 removeFolderItem(studentId, request);
             } catch (Exception e) {
-                continue;
+                System.err.println("Failed to remove folder item: " + e.getMessage());
             }
         }
     }

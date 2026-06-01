@@ -1,5 +1,6 @@
 package org.example.technihongo.services.serviceimplements;
 
+import lombok.RequiredArgsConstructor;
 import org.example.technihongo.dto.FlashcardRequestDTO;
 import org.example.technihongo.dto.FlashcardResponseDTO;
 import org.example.technihongo.dto.PageResponseDTO;
@@ -11,7 +12,6 @@ import org.example.technihongo.repositories.FlashcardRepository;
 import org.example.technihongo.repositories.StudentFlashcardSetRepository;
 import org.example.technihongo.repositories.SystemFlashcardSetRepository;
 import org.example.technihongo.services.interfaces.FlashcardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,14 +25,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class FlashcardServiceImpl implements FlashcardService {
-    @Autowired
-    private FlashcardRepository flashcardRepository;
-    @Autowired
-    private StudentFlashcardSetRepository studentFlashcardSetRepository;
-
-    @Autowired
-    SystemFlashcardSetRepository systemFlashcardSetRepository;
+    private final FlashcardRepository flashcardRepository;
+    private final StudentFlashcardSetRepository studentFlashcardSetRepository;
+    private final SystemFlashcardSetRepository systemFlashcardSetRepository;
 
     @Override
     public PageResponseDTO<FlashcardResponseDTO> getStudentFlashcards(Integer studentId, Integer flashcardSetId, int pageNo, int pageSize, String sortBy, String sortDir) {
